@@ -12,11 +12,17 @@ export async function POST(request: Request) {
     return fail("VALIDATION_ERROR");
   }
 
-  if (findUserByEmail(parsed.data.email)) {
+  if (await findUserByEmail(parsed.data.email)) {
     return fail("EMAIL_TAKEN");
   }
 
-  const user = registerUser(parsed.data);
+  const user = await registerUser(parsed.data);
+
+  // 并发注册同一邮箱时由邮箱占位（SETNX）兜底，这里同样回 EMAIL_TAKEN
+  if (!user) {
+    return fail("EMAIL_TAKEN");
+  }
+
   await startSession(user.id);
 
   return ok(toPublicUser(user), 201);

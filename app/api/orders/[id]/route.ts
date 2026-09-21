@@ -16,7 +16,7 @@ export async function GET(
   }
 
   const { id } = await params;
-  const order = getOrderById(id, current.user.id);
+  const order = await getOrderById(id, current.user.id);
 
   if (!order) {
     return fail("NOT_FOUND");

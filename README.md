@@ -3,7 +3,7 @@
 [中文](#中文) · [English](#english)
 
 车险在线投保演示站：Next.js 全栈（前后端同仓）+ shadcn/ui，中英双语（`/zh`、`/en`）。
-保险产品、投保指引、投保案例均为 mock 数据，账户 / 会话 / 订单存放于服务端进程内存。
+保险产品、投保指引、投保案例均为 mock 数据，账户 / 会话 / 订单 / 客服聊天记录存放于 Upstash Redis。
 
 > 演示项目，非真实保险业务：公司名、地址、电话、备案号均为占位内容，价格与保障条款为演示费率，不代表任何真实保单。
 
@@ -130,7 +130,7 @@ components/
 ├── blocks/              # 业务组件（产品卡、订单列表、案例轮播、客服面板…）
 ├── auth/ forms/         # 登录注册弹窗与各类表单
 lib/
-├── server/              # 服务端逻辑：auth、orders、products、cases、store（内存）、ai/
+├── server/              # 服务端逻辑：auth、orders、products、cases、store（Redis 数据访问）、ai/
 ├── mock/                # mock 数据：products / guide / cases 各自 base + zh + en
 ├── i18n/                # 语言配置、字典、格式化、Provider
 ├── validation/          # 前后端共用的 zod schema
@@ -143,7 +143,7 @@ docs/                    # 需求与设计文档（prd / visual / design / ui-pa
 
 ```bash
 npm install
-cp .example.env .env   # Windows: copy .example.env .env，并填入模型配置
+cp .example.env .env   # Windows: copy .example.env .env，并填入模型配置与 Redis 连接信息
 npm run dev            # http://localhost:3000
 ```
 
@@ -151,7 +151,7 @@ npm run dev            # http://localhost:3000
 
 ### 环境变量
 
-只需配置 AI 客服（模型走 OpenAI 兼容接口）。模板见 `.example.env`，真实 `.env` 已被 `.gitignore` 忽略，不会提交：
+分两部分：AI 客服（模型走 OpenAI 兼容接口）与 Redis 存储。模板见 `.example.env`，真实 `.env` 已被 `.gitignore` 忽略，不会提交。
 
 | 变量 | 说明 |
 | --- | --- |
@@ -159,8 +159,11 @@ npm run dev            # http://localhost:3000
 | `AI_BASE_URL` | 接口地址，需带 `/v1` 这类版本前缀 |
 | `AI_API_KEY` | 接口密钥 |
 | `AI_MODEL` | 模型 id |
+| `swi_KV_REST_API_URL` | Upstash Redis REST 地址（Vercel 接好 Upstash 集成后自动注入） |
+| `swi_KV_REST_API_TOKEN` | Upstash Redis REST Token |
 
-未配置时产品、订单、账户等业务功能不受影响，只有客服对话会返回「未配置」的错误提示。
+Redis 两项也接受无前缀名（`KV_REST_API_URL`、`KV_REST_API_TOKEN`、`UPSTASH_REDIS_REST_URL` 等），换环境不用改代码。缺少 Redis 配置时，登录 / 注册 / 订单 / 客服会直接报配置错误，产品与指引页面不受影响。
+未配置 AI 四项时产品、订单、账户等业务功能不受影响，只有客服对话会返回「未配置」的错误提示。
 
 ### 演示账号
 
@@ -171,14 +174,14 @@ npm run dev            # http://localhost:3000
 ### 数据与存储
 
 - **产品 / 指引 / 案例**：JSON 文件，按「语言无关字段 + 语言相关字段」拆成 `base.json` / `zh.json` / `en.json`，加载时按 `slug`（或 `id`）合并并校验两侧键集合一致
-- **账户 / 会话 / 订单 / 聊天记录**：服务端进程内存（`lib/server/store.ts`、`lib/server/ai/chat-sessions.ts`），自建 `Map`/数组结构，挂在 `globalThis` 上以扛住开发环境热更新
-- **当前状态**：**尚未接入任何数据库**。后续计划接入 [Supabase](https://supabase.com/) 做持久化，替换内存存储（届时账户、订单与聊天记录可在多实例与 Serverless 环境下共享）
+- **账户 / 会话 / 订单 / 聊天记录**：[Upstash Redis](https://upstash.com/)（`lib/server/store.ts`、`lib/server/redis.ts`、`lib/server/ai/chat-sessions.ts`）。会话 1 小时 TTL 且每次请求滑动续期，聊天记录 7 天 TTL，均由 Redis 自动清理；用户、订单、订单索引为常驻键
+- **键名前缀**：所有键统一 `swi:` 前缀（`swi:user:`、`swi:session:`、`swi:order:`、`swi:uorders:`、`swi:dedup:`、`swi:chat:` 等），可安全复用同一个 Redis 实例
+- **种子数据**：演示账号与 2 条演示订单用 `SETNX` 幂等写入，多实例并发启动也只会写一份，且不覆盖用户后来注册或下单的数据；邮箱占用同样用 `SETNX` 原子抢占，避免并发注册同一邮箱
 
 ### 已知限制
 
-- 内存存储只在单进程内有效：重启进程或热更新后回到种子状态，多实例 / Serverless 之间不共享。在 Vercel 上这意味着登录态与订单可能不稳定，需要在接入 Supabase 后才能真正可用
 - 全部为 mock 数据，模拟支付不产生真实保单；PDF 保单、理赔、续保提醒、第三方登录等均未实现
-- 客服对话记录上限：最多 200 个会话（超出淘汰最久未更新者），单会话保留最近 60 条消息
+- 单会话保留最近 60 条消息；聊天记录 7 天后过期
 
 ### 项目文档
 
@@ -191,7 +194,7 @@ npm run dev            # http://localhost:3000
 ### Overview
 
 A full-stack car insurance demo site built with Next.js, shadcn/ui and bilingual routing (`/zh`, `/en`).
-All product, guide and case data is mocked; accounts, sessions and orders live in the server process memory.
+All product, guide and case data is mocked; accounts, sessions, orders and support-chat history live in Upstash Redis.
 
 > Demo project, not a real insurance business: company name, address, phone and filing number are placeholders, and all prices and coverage terms are sample rates.
 
@@ -302,7 +305,7 @@ Business endpoints share one envelope, `{ success, code, message, data }`, where
 
 ```bash
 npm install
-cp .example.env .env   # then fill in the model credentials
+cp .example.env .env   # then fill in the model credentials and Redis connection info
 npm run dev            # http://localhost:3000
 ```
 
@@ -310,7 +313,7 @@ Other scripts: `npm run build`, `npm run start`, `npm run lint`.
 
 ### Environment Variables
 
-Only the AI assistant needs configuration (any OpenAI-compatible endpoint). See `.example.env`; the real `.env` is gitignored.
+Two groups: the AI assistant (any OpenAI-compatible endpoint) and Redis storage. See `.example.env`; the real `.env` is gitignored.
 
 | Variable | Purpose |
 | --- | --- |
@@ -318,8 +321,11 @@ Only the AI assistant needs configuration (any OpenAI-compatible endpoint). See 
 | `AI_BASE_URL` | Base URL including a version prefix such as `/v1` |
 | `AI_API_KEY` | API key |
 | `AI_MODEL` | Model id |
+| `swi_KV_REST_API_URL` | Upstash Redis REST URL (injected automatically once the Vercel Upstash integration is connected) |
+| `swi_KV_REST_API_TOKEN` | Upstash Redis REST token |
 
-Without these, products, orders and accounts still work — only the support chat reports that it is not configured.
+The Redis variables also accept unprefixed names (`KV_REST_API_URL`, `KV_REST_API_TOKEN`, `UPSTASH_REDIS_REST_URL`, …), so switching environments needs no code change. Without them, sign-in, registration, orders and chat fail with a configuration error, while the product and guide pages keep working.
+Without the AI variables, products, orders and accounts still work — only the support chat reports that it is not configured.
 
 ### Demo Account
 
@@ -330,14 +336,14 @@ Without these, products, orders and accounts still work — only the support cha
 ### Data & Storage
 
 - **Products / guide / cases**: JSON files split into locale-agnostic (`base.json`) and locale-specific (`zh.json`, `en.json`) parts, merged by `slug` (or `id`) at load time with key-set validation
-- **Accounts / sessions / orders / chat history**: in-process memory (`lib/server/store.ts`, `lib/server/ai/chat-sessions.ts`) using plain `Map`/array structures pinned to `globalThis` to survive dev hot reloads
-- **Current status**: **no database yet**. The plan is to move persistence to [Supabase](https://supabase.com/) so accounts, orders and chat history survive restarts and work across instances
+- **Accounts / sessions / orders / chat history**: [Upstash Redis](https://upstash.com/) (`lib/server/store.ts`, `lib/server/redis.ts`, `lib/server/ai/chat-sessions.ts`). Sessions carry a 1-hour TTL slid forward on every request and chat history a 7-day TTL, both reclaimed by Redis automatically; users, orders and order indexes are persistent keys
+- **Key prefix**: every key is namespaced under `swi:` (`swi:user:`, `swi:session:`, `swi:order:`, `swi:uorders:`, `swi:dedup:`, `swi:chat:`, …), so the same Redis instance can be shared safely
+- **Seed data**: the demo account and its two demo orders are written with idempotent `SETNX`, so concurrent instance starts write exactly one copy and never overwrite what users registered or ordered afterwards. Email ownership uses the same atomic `SETNX` claim, which prevents duplicate registration under concurrency
 
 ### Known Limitations
 
-- In-memory storage is single-process only: restarting the server resets it to seed data, and separate instances do not share state. On Vercel this makes sign-in and orders unreliable until Supabase lands
 - Everything is mocked; the simulated payment creates no real policy. PDF policies, claims, renewal reminders and social sign-in are out of scope
-- Chat history keeps at most 200 sessions (least recently updated evicted) and the last 60 messages per session
+- Chat history keeps the last 60 messages per session and expires after 7 days
 
 ### Documentation
 

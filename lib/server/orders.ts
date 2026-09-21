@@ -2,60 +2,73 @@ import { randomUUID } from "node:crypto";
 
 import type { InsuredInfo, Order, VehicleInfo } from "@/lib/types";
 
-import { dedupKey, insertOrder, store } from "./store";
+import {
+  getDedupOrderId,
+  getOrderRecord,
+  insertOrder,
+  listUserOrderIds,
+  saveOrder,
+} from "./store";
 
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
-/** 已生效订单到期后转为已失效：读取时顺带结算，不引入定时任务 */
-function syncExpiry(order: Order): Order {
+/**
+ * 已生效订单到期后转为已失效：读取时顺带结算并回写，
+ * 不引入定时任务。回写后 Redis 里的状态才是最新的。
+ */
+async function syncExpiry(order: Order): Promise<Order> {
   if (
     order.status === "ACTIVE" &&
     order.expireAt &&
     new Date(order.expireAt).getTime() <= Date.now()
   ) {
     order.status = "EXPIRED";
+    await saveOrder(order);
   }
 
   return order;
 }
 
 /** 某用户的全部订单，按下单时间倒序（索引本身已是倒序） */
-export function listOrdersByUser(userId: string): Order[] {
-  const ids = store.orderIdsByUser.get(userId) ?? [];
+export async function listOrdersByUser(userId: string): Promise<Order[]> {
+  const ids = await listUserOrderIds(userId);
+  const orders = await Promise.all(ids.map((id) => getOrderRecord(id)));
 
-  return ids
-    .map((id) => store.orders.get(id))
-    .filter((order): order is Order => Boolean(order))
-    .map(syncExpiry);
+  return await Promise.all(
+    orders
+      .filter((order): order is Order => Boolean(order))
+      .map((order) => syncExpiry(order)),
+  );
 }
 
 /** 非本人订单一律视为不存在，页面据此走 404，不泄露资源存在性 */
-export function getOrderById(orderId: string, userId: string): Order | null {
-  const order = store.orders.get(orderId);
+export async function getOrderById(
+  orderId: string,
+  userId: string,
+): Promise<Order | null> {
+  const order = await getOrderRecord(orderId);
 
   if (!order || order.userId !== userId) {
     return null;
   }
 
-  return syncExpiry(order);
+  return await syncExpiry(order);
 }
 
 /** 同车同产品是否已有待支付或已生效订单 */
-export function findDuplicateOrder(
+export async function findDuplicateOrder(
   userId: string,
   plateNo: string,
   productId: string,
-): Order | null {
-  const orderId = store.orderDedupIndex.get(
-    dedupKey(userId, plateNo, productId),
-  );
-  const order = orderId ? store.orders.get(orderId) : undefined;
+): Promise<Order | null> {
+  const orderId = await getDedupOrderId(userId, plateNo, productId);
+  const order = orderId ? await getOrderRecord(orderId) : null;
 
   if (!order || order.userId !== userId) {
     return null;
   }
 
-  const synced = syncExpiry(order);
+  const synced = await syncExpiry(order);
 
   return synced.status === "PENDING" || synced.status === "ACTIVE"
     ? synced
@@ -63,13 +76,13 @@ export function findDuplicateOrder(
 }
 
 /** 创建待支付订单；金额取产品当前价格快照，后续改价不影响历史订单 */
-export function createOrder(input: {
+export async function createOrder(input: {
   userId: string;
   productId: string;
   productSnapshot: { nameZh: string; nameEn: string; price: number };
   insured: InsuredInfo;
   vehicle: VehicleInfo;
-}): Order {
+}): Promise<Order> {
   const order: Order = {
     id: randomUUID(),
     userId: input.userId,
@@ -84,25 +97,27 @@ export function createOrder(input: {
     expireAt: null,
   };
 
-  insertOrder(store, order);
+  await insertOrder(order);
 
   return order;
 }
 
 /** 模拟支付：待支付 → 已生效，写入生效时间与到期时间（一年后） */
-export function payOrder(order: Order): Order {
+export async function payOrder(order: Order): Promise<Order> {
   const now = new Date();
 
   order.status = "ACTIVE";
   order.effectiveAt = now.toISOString();
   order.expireAt = new Date(now.getTime() + YEAR_MS).toISOString();
+  await saveOrder(order);
 
   return order;
 }
 
 /** 取消订单：待支付 → 已取消 */
-export function cancelOrder(order: Order): Order {
+export async function cancelOrder(order: Order): Promise<Order> {
   order.status = "CANCELLED";
+  await saveOrder(order);
 
   return order;
 }

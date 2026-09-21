@@ -4,7 +4,20 @@ import { cookies } from "next/headers";
 import type { PublicUser, Session, User } from "@/lib/types";
 
 import { hashPassword, verifyPassword } from "./password";
-import { store } from "./store";
+import {
+  addUserSession,
+  claimEmail,
+  deleteSessionRecord,
+  getSessionRecord,
+  getUserByEmail,
+  getUserById,
+  invalidateOtherSessions,
+  normalizeEmail,
+  releaseEmail,
+  removeUserSession,
+  saveSession,
+  saveUser,
+} from "./store";
 
 export const SESSION_COOKIE = "swi_session";
 
@@ -29,22 +42,24 @@ export function toPublicUser(user: User): PublicUser {
   };
 }
 
-export function findUserByEmail(email: string): User | null {
-  const userId = store.userIdByEmail.get(email.trim().toLowerCase());
-
-  return userId ? (store.users.get(userId) ?? null) : null;
+export async function findUserByEmail(email: string): Promise<User | null> {
+  return await getUserByEmail(email);
 }
 
-export function findUserById(userId: string): User | null {
-  return store.users.get(userId) ?? null;
+export async function findUserById(userId: string): Promise<User | null> {
+  return await getUserById(userId);
 }
 
-export function registerUser(input: {
+/**
+ * 注册新用户。邮箱占用靠 SETNX 原子抢占，撞车时返回 null，
+ * 调用方据此回 EMAIL_TAKEN。
+ */
+export async function registerUser(input: {
   username: string;
   email: string;
   password: string;
-}): User {
-  const email = input.email.trim().toLowerCase();
+}): Promise<User | null> {
+  const email = normalizeEmail(input.email);
   const now = new Date().toISOString();
 
   const user: User = {
@@ -56,8 +71,17 @@ export function registerUser(input: {
     updatedAt: now,
   };
 
-  store.users.set(user.id, user);
-  store.userIdByEmail.set(email, user.id);
+  if (!(await claimEmail(email, user.id))) {
+    return null;
+  }
+
+  try {
+    await saveUser(user);
+  } catch (error) {
+    // 写用户失败就释放邮箱占位，否则这个邮箱会永久注册不上
+    await releaseEmail(email);
+    throw error;
+  }
 
   return user;
 }
@@ -68,21 +92,46 @@ export function verifyUserPassword(user: User, password: string): boolean {
 
 /* ---------- 会话 ---------- */
 
-export function createSession(userId: string): Session {
+export async function createSession(userId: string): Promise<Session> {
   const session: Session = {
     id: randomUUID(),
     userId,
     expiresAt: Date.now() + SESSION_TTL_MS,
   };
 
-  store.sessions.set(session.id, session);
+  await saveSession(session, SESSION_TTL_SECONDS);
+  await addUserSession(userId, session.id);
 
   return session;
 }
 
+/** 按会话 id 取会话与用户；过期或用户已不存在时顺手清理 */
+async function loadSession(
+  sessionId: string,
+): Promise<{ session: Session; user: User } | null> {
+  const session = await getSessionRecord(sessionId);
+
+  if (!session) {
+    return null;
+  }
+
+  if (session.expiresAt <= Date.now()) {
+    await deleteSessionRecord(sessionId);
+    return null;
+  }
+
+  const user = await getUserById(session.userId);
+
+  if (!user) {
+    await deleteSessionRecord(sessionId);
+    return null;
+  }
+
+  return { session, user };
+}
+
 /**
  * 读取当前会话。只读、不续期，因此可以安全地在服务端组件里调用。
- * 过期的会话会被顺手清理。
  */
 export async function readSession(): Promise<{
   session: Session;
@@ -95,25 +144,7 @@ export async function readSession(): Promise<{
     return null;
   }
 
-  const session = store.sessions.get(sessionId);
-
-  if (!session) {
-    return null;
-  }
-
-  if (session.expiresAt <= Date.now()) {
-    store.sessions.delete(sessionId);
-    return null;
-  }
-
-  const user = store.users.get(session.userId);
-
-  if (!user) {
-    store.sessions.delete(sessionId);
-    return null;
-  }
-
-  return { session, user };
+  return await loadSession(sessionId);
 }
 
 /**
@@ -126,7 +157,8 @@ export async function renewSession(): Promise<{
   user: User;
 } | null> {
   const cookieStore = await cookies();
-  const current = await readSession();
+  const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
+  const current = sessionId ? await loadSession(sessionId) : null;
 
   if (!current) {
     cookieStore.delete(SESSION_COOKIE);
@@ -134,6 +166,8 @@ export async function renewSession(): Promise<{
   }
 
   current.session.expiresAt = Date.now() + SESSION_TTL_MS;
+  // 重新 SET 一次，Cookie 与服务端 TTL 一起顺延
+  await saveSession(current.session, SESSION_TTL_SECONDS);
   cookieStore.set(SESSION_COOKIE, current.session.id, SESSION_COOKIE_OPTIONS);
 
   return current;
@@ -141,7 +175,7 @@ export async function renewSession(): Promise<{
 
 /** 登录成功后签发会话并写入 HttpOnly Cookie，只能在 Route Handler 中调用 */
 export async function startSession(userId: string): Promise<Session> {
-  const session = createSession(userId);
+  const session = await createSession(userId);
   const cookieStore = await cookies();
 
   cookieStore.set(SESSION_COOKIE, session.id, SESSION_COOKIE_OPTIONS);
@@ -155,17 +189,22 @@ export async function endSession(): Promise<void> {
   const sessionId = cookieStore.get(SESSION_COOKIE)?.value;
 
   if (sessionId) {
-    store.sessions.delete(sessionId);
+    const session = await getSessionRecord(sessionId);
+
+    if (session) {
+      await removeUserSession(session.userId, sessionId);
+    }
+
+    await deleteSessionRecord(sessionId);
   }
 
   cookieStore.delete(SESSION_COOKIE);
 }
 
 /** 修改密码后作废该用户的其它会话，当前会话保留 */
-export function destroyOtherSessions(userId: string, keepSessionId: string) {
-  for (const [id, session] of store.sessions) {
-    if (session.userId === userId && id !== keepSessionId) {
-      store.sessions.delete(id);
-    }
-  }
+export async function destroyOtherSessions(
+  userId: string,
+  keepSessionId: string,
+): Promise<void> {
+  await invalidateOtherSessions(userId, keepSessionId);
 }

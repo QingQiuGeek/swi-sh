@@ -38,8 +38,8 @@ export async function POST(request: Request) {
     return fail("SAME_PASSWORD");
   }
 
-  updateUserPassword(current.user, newPassword);
-  destroyOtherSessions(current.user.id, current.session.id);
+  await updateUserPassword(current.user, newPassword);
+  await destroyOtherSessions(current.user.id, current.session.id);
 
   return ok({ updated: true });
 }

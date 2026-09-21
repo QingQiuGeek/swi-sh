@@ -46,7 +46,7 @@ export async function POST(request: Request) {
   const userId = current?.user.id ?? null;
 
   // 维护「会话 id → 聊天记录」：登录后这一步就把匿名会话绑到了 userId
-  saveChatSession({ sessionId, userId, messages });
+  await saveChatSession({ sessionId, userId, messages });
 
   try {
     const agent = createSupportAgent({
@@ -63,8 +63,12 @@ export async function POST(request: Request) {
       sendReasoning: false,
       // 流结束后再存一次完整列表（含本次助手回复）。只在请求前存的话，
       // 助手回复只存在于浏览器内存，刷新后就只剩用户自己的提问。
-      onEnd: ({ messages: settled }) => {
-        saveChatSession({ sessionId, userId, messages: settled as UIMessage[] });
+      onEnd: async ({ messages: settled }) => {
+        await saveChatSession({
+          sessionId,
+          userId,
+          messages: settled as UIMessage[],
+        });
       },
       // 流已开始后上游才报错（鉴权失败、模型未开通等）时，AI SDK 默认只回一句
       // 「An error occurred.」，前端拿不到原因。这里把真实报错打到服务端日志。
@@ -90,7 +94,7 @@ export async function GET(request: Request) {
     return fail("VALIDATION_ERROR");
   }
 
-  const session = getChatSession(sessionId);
+  const session = await getChatSession(sessionId);
 
   if (!session) {
     return ok({ messages: [] });

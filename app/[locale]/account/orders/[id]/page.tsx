@@ -47,7 +47,7 @@ export default async function OrderDetailPage({ params }: OrderDetailProps) {
     return null;
   }
 
-  const order = getOrderById(id, session.user.id);
+  const order = await getOrderById(id, session.user.id);
 
   // 订单不存在与非本人访问统一走 404，不泄露资源存在性
   if (!order) {

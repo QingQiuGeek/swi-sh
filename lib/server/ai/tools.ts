@@ -126,7 +126,10 @@ export function createOrderQueryTool(options: {
         };
       }
 
-      const orders = listOrdersByUser(requested).slice(0, MAX_ORDER_RESULTS);
+      const orders = (await listOrdersByUser(requested)).slice(
+        0,
+        MAX_ORDER_RESULTS,
+      );
 
       return {
         total: orders.length,

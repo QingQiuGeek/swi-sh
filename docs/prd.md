@@ -264,7 +264,7 @@ Header 右侧用户名 /「个人中心」
 | 表单 | shadcn `Form` + `react-hook-form` + `zod` | 已确认，待安装 |
 | 国际化 | Next.js 官方方案：`app/[locale]/` + `zh.json`/`en.json` 字典 + `middleware.ts` | 待实现 |
 | 后端数据 | Next.js Route Handlers（`app/api/**`）+ `lib/mock/**/*.json` | 待实现 |
-| 数据存储 | 服务端进程内存结构（`Map` / 数组），不引入数据库 | 待实现 |
+| 数据存储 | Upstash Redis（`@upstash/redis`），账户 / 会话 / 订单 / 聊天记录跨实例共享 | 已实现 |
 | 包管理 | npm | 已具备 |
 | 路由形态 | App Router 真实路由，URL 首段为语言，无 hash 路由 | — |
 
@@ -302,7 +302,7 @@ lib/
       base.json
       zh.json
       en.json
-  server/              # 内存存储与业务逻辑
+  server/              # Redis 数据访问层与业务逻辑
   types/               # 共享类型定义
 ```
 
@@ -415,9 +415,9 @@ type ApiCode = string;     // 取值见下方业务码表
 
 **Case**：`id`、`sortOrder`、`productId`、`icon`、`claimDays`、`plateNo` 为语言无关字段；`city`、`ownerName`、`summary`、`quote` 按语言取值。卡片上的产品名不单独翻译，由 `productId` 关联产品数据按当前语言取，避免产品改名后案例里的名字不同步。
 
-**ChatSession**：`id`、`userId`（登录后写入，未登录保持 `null`）、`messages[]`、`updatedAt`；存于服务端内存，上限与淘汰规则见 §10.4。
+**ChatSession**：`id`、`userId`（登录后写入，未登录保持 `null`）、`messages[]`、`updatedAt`；存于 Upstash Redis 并带 7 天 TTL，规则见 §10.4。
 
-### 10.3 数据文件与内存存储
+### 10.3 数据文件与存储
 
 **字典（界面文案）**：`lib/i18n/dictionaries/zh.json`、`en.json`，按模块分键（`nav`、`home`、`products`、`guide`、`cases`、`about`、`auth`、`account`、`common`、`errors`）。
 
@@ -435,32 +435,27 @@ lib/mock/products/
 - `guide/` 目录采用同样结构（`base.json` + `zh.json` + `en.json`）。
 - `cases/` 目录同样拆成三份：`base.json` 按 `id` 存语言无关字段，`zh.json` / `en.json` 按 `id` 存城市、车主、摘要与原话；加载时校验两份语言文件的 `id` 集合与 `base` 完全一致，并校验 `productId` 能在产品数据里找到。
 
-**内存存储**：用户、会话、订单存放在服务端进程内存中，使用 `Map` + 数组自建结构，不引入数据库。
+**存储（Upstash Redis）**：用户、会话、订单、客服聊天记录存放在 Upstash Redis（`lib/server/redis.ts` 建客户端与键名，`lib/server/store.ts` 做数据访问）。选 Redis 而不是继续用进程内存，是因为 Vercel 上每个 Route Handler 都是独立函数实例，进程内存无法跨实例共享——登录写入实例 A、下一次请求落到实例 B 就会读不到会话。
 
-```ts
-// lib/server/store.ts
-type MemoryStore = {
-  users: Map<string, User>;               // userId -> User
-  userIdByEmail: Map<string, string>;     // email(小写) -> userId，保证邮箱唯一
-  sessions: Map<string, Session>;         // sessionId -> { userId, expiresAt }
-  orders: Map<string, Order>;             // orderId -> Order
-  orderIdsByUser: Map<string, string[]>;  // userId -> orderId[]，按下单时间倒序
-  orderDedupIndex: Map<string, string>;   // `${userId}:${plateNo}:${productId}` -> orderId，
-                                          // 用于拦截「同车同产品重复投保」
-};
+| 数据 | Redis 键 | 结构 | TTL |
+| --- | --- | --- | --- |
+| 用户 | `swi:user:<userId>` | JSON | 常驻 |
+| 邮箱唯一索引 | `swi:email:<email 小写>` | userId 字符串 | 常驻 |
+| 会话 | `swi:session:<sessionId>` | `{ id, userId, expiresAt }` | 1 小时，滑动续期 |
+| 用户会话索引 | `swi:usessions:<userId>` | Set（sessionId 集合） | 常驻，登出 / 改密时同步 |
+| 订单 | `swi:order:<orderId>` | JSON | 常驻 |
+| 用户订单列表 | `swi:uorders:<userId>` | List（orderId，`LPUSH` 倒序） | 常驻 |
+| 重复投保索引 | `swi:dedup:<userId>:<车牌大写>:<productId>` | orderId 字符串 | 常驻 |
+| 客服会话 | `swi:chat:<sessionId>` | `{ id, userId, messages, updatedAt }` | 7 天 |
 
-// 开发环境热更新会重新求值模块，挂到 globalThis 上避免内存数据被打散
-const globalForStore = globalThis as unknown as { __swiStore?: MemoryStore };
-export const store = (globalForStore.__swiStore ??= createStore());
-```
+- 所有键统一 `swi:` 前缀，可安全复用同一个 Upstash 实例。
+- 连接信息从环境变量读取，优先 `swi_KV_REST_API_URL` / `swi_KV_REST_API_TOKEN`，其次兼容无前缀的 `KV_REST_API_URL`、`KV_REST_API_TOKEN`、`UPSTASH_REDIS_REST_URL` 等；客户端懒加载，缺配置时在首次调用处报错，而不是构建期崩溃。
+- 邮箱唯一性用 `SETNX` 原子抢占（`swi:email:`），并发注册同一邮箱只有一个实例能成功，比「先查后写」稳。
+- 订单状态变更（支付、取消、到期结算）必须显式回写（`saveOrder`）；不能再依赖改对象引用，因为读出来的只是反序列化副本。
 
-**初始化种子数据**：进程启动时写入 1 个演示账号（`demo@example.com` / `Demo1234`）与 2 条不同状态的演示订单，便于直接查看个人中心与订单列表。
+**初始化种子数据**：1 个演示账号（`demo@example.com` / `Demo1234`）与 2 条不同状态的演示订单，用 `SETNX` 幂等写入——多实例并发启动只会写一份，且只写不覆盖，不会冲掉用户后来注册或下单的数据。
 
-**生命周期与限制**
-
-- 内存数据随进程结束而丢失，重启或触发开发环境热更新后回到种子状态。
-- 因此该方案仅适用于本地开发与演示；若后续需要持久化或多实例部署，需替换为数据库或共享存储。
-- 用户、订单、账户维护接口均需通过会话校验，禁止仅凭 `userId` 参数读取或修改他人数据。
+**访问控制**：用户、订单、账户维护接口均需通过会话校验，禁止仅凭 `userId` 参数读取或修改他人数据。
 
 ### 10.4 在线客服（AI 对话）
 
@@ -484,14 +479,14 @@ export const store = (globalForStore.__swiStore ??= createStore());
 | 工具 | 参数（zod 约束） | 行为 |
 | --- | --- | --- |
 | `searchProducts` | `keyword?`、`category?`、`maxPrice?` | 查询产品数据，返回名称、价格、保额、保障内容、适用车型，最多 6 条 |
-| `queryOrders` | `userId` | 按 `userId` 查询内存中的真实订单，最多 10 条 |
+| `queryOrders` | `userId` | 按 `userId` 查询 Redis 中的真实订单，最多 10 条 |
 
 **业务规则**
 
 - **产品问题**：必须先调用 `searchProducts`，禁止凭记忆编造价格或保障内容；**未登录也能咨询产品**。
 - **订单问题**：必须先调用 `queryOrders`。传入的 `userId` 与服务端会话解析出的用户不一致或为空时，工具返回 `requiresLogin`，助手只提示「请先注册登录」，不返回任何订单信息。
 - **登录态判定**：一律由服务端读取 Cookie 会话，前端传参不参与判定，「请先登录」这道门无法从前端绕过。
-- **会话记录**：浏览器生成会话 id 存 localStorage，服务端用 `Map` 维护「会话 id → 消息列表」；**登录后发消息即把该会话绑定到 `userId`**，已绑定的会话只回给本人。会话上限 200 个（超出淘汰最久未更新者），单会话只保留最近 60 条消息。
+- **会话记录**：浏览器生成会话 id 存 localStorage，服务端用 Redis 维护「会话 id → 消息列表」（`swi:chat:<sessionId>`，7 天 TTL）；**登录后发消息即把该会话绑定到 `userId`**，已绑定的会话只回给本人。单会话只保留最近 60 条消息。
 - **回答语言**：跟随页面语言（`zh` / `en`），与 URL 语言段一致。
 - **输入形态**：仅支持文本，不接受图片、文件、语音。
 - **范围外问题**：不编造，引导用户通过页脚的电话或邮箱联系人工客服。
@@ -501,7 +496,7 @@ export const store = (globalForStore.__swiStore ??= createStore());
 ## 11. 约束
 
 - **技术约束**：Next.js 全栈；产品与指引数据由后端 mock JSON 提供，前端经接口请求获取。
-- **存储约束**：账户与订单仅存进程内存，不做持久化，不做多实例部署；会话有效期 1 小时并滑动续期。
+- **存储约束**：账户 / 会话 / 订单 / 客服聊天记录存 Upstash Redis，可在多实例与 Serverless 环境下共享；会话有效期 1 小时并滑动续期，聊天记录 7 天过期。产品、指引、案例仍为构建期只读 mock JSON，不进 Redis。
 - **路由约束**：不使用 hash 路由；URL 首段必须为语言（`zh` / `en`）。
 - **UI 约束**：优先使用 shadcn/ui 组件与 Tailwind 原子类，避免自造基础组件；新增组件用 `npx shadcn@latest add <name>` 安装；视觉规范详见 `visual.md` / `design.md`。
 - **数据约束**：全部为 mock 数据，不得冒充真实保险条款；页面需明示「演示数据」。
@@ -516,7 +511,7 @@ export const store = (globalForStore.__swiStore ??= createStore());
 
 **非目标（本期不做）**
 
-- 真实支付、真实保单、理赔、续保提醒、短信/邮件通知、第三方登录、优惠券、代理人体系、运营后台、PDF 保单导出、数据持久化。
+- 真实支付、真实保单、理赔、续保提醒、短信/邮件通知、第三方登录、优惠券、代理人体系、运营后台、PDF 保单导出、关系型数据库（状态数据存 Redis，不做关系建模）。
 
 ---
 
@@ -526,7 +521,7 @@ export const store = (globalForStore.__swiStore ??= createStore());
 
 | 编号 | 决策 | 确认轮次 |
 | --- | --- | --- |
-| C1 | 账户与订单存放在 Next.js 后端进程内存，自建 `Map`/数组结构，不引入数据库 | 第 1 轮 |
+| C1 | ~~账户与订单存放在 Next.js 后端进程内存，自建 `Map`/数组结构，不引入数据库~~ → 被 C19 取代 | 第 1 轮（已撤销） |
 | C2 | 保留「提交投保」动作，提交后真实生成订单 | 第 1 轮 |
 | C3 | 保险产品、投保指引、关于我们各有独立页面 | 第 1 轮 |
 | C4 | 站名「汽车保险」；公司名、地址、电话、备案号全部 mock；Logo 用 `public/next.svg` | 第 1 轮 |
@@ -544,6 +539,7 @@ export const store = (globalForStore.__swiStore ??= createStore());
 | C16 | 首页新增「投保案例」分区：横向无缝自动轮播，数据来自后端 `/api/cases` | 第 4 轮 |
 | C17 | 首页右侧悬浮工具轨：在线客服 / 联系方式 / 返回顶部；页脚补充联系方式与微信二维码，并移除页脚语言切换 | 第 4 轮 |
 | C18 | 在线客服 = AI 助手：AI SDK（`ToolLoopAgent` + zod 工具）+ AI Elements 组件，模型走 OpenAI 兼容接口，凭据从环境变量读取，回答语言跟随页面语言 | 第 4 轮 |
+| C19 | 存储改用 Upstash Redis 修复 Vercel 多实例下登录态丢失：账户 / 会话 / 订单 / 聊天记录入 Redis（会话 1h TTL 滑动续期、聊天 7 天 TTL）；产品、指引、案例仍为构建期 mock JSON | 第 5 轮 |
 
 ### 12.2 未决项
 

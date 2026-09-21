@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return fail("VALIDATION_ERROR");
   }
 
-  const user = findUserByEmail(parsed.data.email);
+  const user = await findUserByEmail(parsed.data.email);
 
   if (!user || !verifyUserPassword(user, parsed.data.password)) {
     return fail("INVALID_CREDENTIALS");

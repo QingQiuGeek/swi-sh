@@ -52,7 +52,7 @@ export default async function AccountOverviewPage({
     return null;
   }
 
-  const orders = listOrdersByUser(session.user.id).map((order) =>
+  const orders = (await listOrdersByUser(session.user.id)).map((order) =>
     toOrderView(order, locale),
   );
 

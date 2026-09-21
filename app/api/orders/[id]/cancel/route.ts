@@ -16,7 +16,7 @@ export async function POST(
   }
 
   const { id } = await params;
-  const order = getOrderById(id, current.user.id);
+  const order = await getOrderById(id, current.user.id);
 
   if (!order) {
     return fail("NOT_FOUND");
@@ -26,5 +26,5 @@ export async function POST(
     return fail("ORDER_NOT_CANCELLABLE");
   }
 
-  return ok(toOrderView(cancelOrder(order), resolveRequestLocale(request)));
+  return ok(toOrderView(await cancelOrder(order), resolveRequestLocale(request)));
 }

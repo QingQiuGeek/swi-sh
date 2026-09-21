@@ -21,9 +21,9 @@ export async function PATCH(request: Request) {
 
   const email = parsed.data.email.trim().toLowerCase();
 
-  if (isEmailTakenByOther(email, current.user.id)) {
+  if (await isEmailTakenByOther(email, current.user.id)) {
     return fail("EMAIL_TAKEN");
   }
 
-  return ok(toPublicUser(updateUserProfile(current.user, parsed.data)));
+  return ok(toPublicUser(await updateUserProfile(current.user, parsed.data)));
 }

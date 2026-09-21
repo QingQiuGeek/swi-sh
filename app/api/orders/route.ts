@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 
   const statusParam = new URL(request.url).searchParams.get("status");
   const locale = resolveRequestLocale(request);
-  let orders = listOrdersByUser(current.user.id);
+  let orders = await listOrdersByUser(current.user.id);
 
   if (statusParam) {
     if (!(ORDER_STATUSES as readonly string[]).includes(statusParam)) {
@@ -62,11 +62,13 @@ export async function POST(request: Request) {
     return fail("NOT_FOUND");
   }
 
-  if (findDuplicateOrder(current.user.id, parsed.data.vehicle.plateNo, product.id)) {
+  if (
+    await findDuplicateOrder(current.user.id, parsed.data.vehicle.plateNo, product.id)
+  ) {
     return fail("DUPLICATE_ORDER");
   }
 
-  const order = createOrder({
+  const order = await createOrder({
     userId: current.user.id,
     productId: product.id,
     productSnapshot: {

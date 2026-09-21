@@ -99,7 +99,8 @@ lib/
     guide/{base,zh,en}.json
     cases/{base,zh,en}.json
   server/
-    store.ts                        # 内存存储（Map 结构 + globalThis 单例 + 种子数据）
+    redis.ts                        # Upstash Redis 客户端（懒加载）与全部键名定义
+    store.ts                        # Redis 数据访问层：用户、会话、订单、幂等种子数据
     auth.ts                         # 密码哈希、会话签发与校验、滑动续期
     products.ts                     # 合并 base + 语言文件，返回产品数据
     guide.ts
