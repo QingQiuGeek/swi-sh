@@ -1,0 +1,83 @@
+[
+  {
+    "slug": "compulsory-traffic",
+    "name": "Compulsory Traffic Insurance",
+    "tagline": "The mandatory baseline cover. A vehicle may not be driven until it is in force.",
+    "applicableVehicles": "Private cars and non-commercial passenger vehicles",
+    "coverageText": null,
+    "coverages": [
+      { "title": "Third-party injury and death", "desc": "Pays for injury or death caused to a third party within the liability limit, including medical costs, lost earnings, and care." },
+      { "title": "Third-party property damage", "desc": "Pays for direct property damage caused to a third party, shared by the degree of fault and capped by the limit." },
+      { "title": "Settlement without fault", "desc": "Where the insured vehicle is not at fault, the third party is still paid first within the liability limit." },
+      { "title": "Legal proof of roadworthiness", "desc": "A vehicle without compulsory cover may not be driven and cannot pass its annual inspection." }
+    ]
+  },
+  {
+    "slug": "commercial-basic",
+    "name": "Commercial Cover · Basic",
+    "tagline": "Third-party liability and occupant cover in one plan, built for everyday city driving.",
+    "applicableVehicles": "Private cars and non-commercial passenger vehicles",
+    "coverageText": null,
+    "coverages": [
+      { "title": "Third-party liability ¥500,000", "desc": "Picks up where compulsory cover stops, covering both injury and property damage." },
+      { "title": "Occupant liability", "desc": "Pays for injury to the driver and passengers, insured per approved seat." },
+      { "title": "Roadside assistance, twice a year", "desc": "Towing, jump-starts, and fuel delivery, with towing covered up to 50 km." },
+      { "title": "Waiver of deductible", "desc": "Removes the fault-based deductible so qualifying claims are paid in full." }
+    ]
+  },
+  {
+    "slug": "commercial-comfort",
+    "name": "Commercial Cover · Comfort",
+    "tagline": "Adds own damage cover and unlimited roadside assistance for everyday risk.",
+    "applicableVehicles": "Private cars and non-commercial passenger vehicles",
+    "coverageText": null,
+    "coverages": [
+      { "title": "Third-party liability ¥1,000,000", "desc": "A high liability limit covering injury, death, and property damage to reduce out-of-pocket risk." },
+      { "title": "Own damage cover", "desc": "Collision, overturning, and natural disasters are covered at the vehicle's actual value." },
+      { "title": "Occupant liability", "desc": "Pays for injury to the driver and passengers, with limits selectable per seat." },
+      { "title": "Unlimited roadside assistance", "desc": "Towing, jump-starts, fuel delivery, and tyre changes with no annual cap; 30-minute response in urban areas." },
+      { "title": "Waiver of deductible", "desc": "Removes the fault-based deductible so qualifying claims are paid in full." }
+    ]
+  },
+  {
+    "slug": "commercial-premium",
+    "name": "Commercial Cover · Premium",
+    "tagline": "High liability limits, theft cover, and a dedicated claims adviser.",
+    "applicableVehicles": "Private cars and non-commercial passenger vehicles (over ¥150,000)",
+    "coverageText": null,
+    "coverages": [
+      { "title": "Third-party liability ¥2,000,000", "desc": "Built for severe accidents, covering injury and property damage in one limit." },
+      { "title": "Own damage cover, including added equipment", "desc": "Covers aftermarket dash cams, sensors, and similar equipment alongside the factory specification." },
+      { "title": "Theft and robbery", "desc": "Loss from theft or robbery of the whole vehicle is paid at the vehicle's actual value." },
+      { "title": "Occupant liability", "desc": "Injury cover for the driver and passengers, with higher limits than Basic or Comfort." },
+      { "title": "Dedicated claims adviser", "desc": "One named adviser follows the report, assessment, and payout, responding live during support hours." },
+      { "title": "Designated driver, six times a year", "desc": "A designated driver within 20 km when you have been drinking or feel unwell." }
+    ]
+  },
+  {
+    "slug": "third-party-liability",
+    "name": "Third-Party Liability",
+    "tagline": "Third parties only, and the most direct top-up to compulsory cover.",
+    "applicableVehicles": "Private cars and non-commercial passenger vehicles",
+    "coverageText": null,
+    "coverages": [
+      { "title": "Third-party injury and death", "desc": "Pays for injury or death caused to a third party, including medical costs, lost earnings, and care." },
+      { "title": "Third-party property damage", "desc": "Pays for direct damage to third-party vehicles, public facilities, and similar property." },
+      { "title": "Legal costs", "desc": "Arbitration and litigation costs arising from an accident are covered within the liability limit." },
+      { "title": "Waiver of deductible", "desc": "Removes the fault-based deductible so qualifying claims are paid in full." }
+    ]
+  },
+  {
+    "slug": "own-damage",
+    "name": "Own Damage Cover",
+    "tagline": "Your own car only, paid at the vehicle's actual value.",
+    "applicableVehicles": "Private cars and non-commercial passenger vehicles",
+    "coverageText": "At the vehicle's actual value",
+    "coverages": [
+      { "title": "Collision and overturning", "desc": "Damage to your vehicle from a collision with another vehicle or object, or from overturning." },
+      { "title": "Natural disasters", "desc": "Damage from lightning, heavy rain, flooding, hail, and typhoons." },
+      { "title": "Falling objects", "desc": "Damage from falling objects, uprooted trees, and collapsing structures." },
+      { "title": "Waiver of deductible", "desc": "Removes the fault-based deductible so qualifying claims are paid in full." }
+    ]
+  }
+]

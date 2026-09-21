@@ -1,0 +1,218 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* 本期只做浅色主题：把 dark: 变体绑定到 .dark 容器上（页面永不渲染 .dark），
+   使 shadcn 组件源码自带的 dark: 类成为惰性样式。
+   若删除这一行，dark: 会退回 Tailwind 默认的 prefers-color-scheme 媒体查询，
+   系统开启深色模式的用户会看到无人维护的半成品暗色页面。 */
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(0.9867 0.0051 247.88);
+  --foreground: oklch(0.2210 0.0394 258.28);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2210 0.0394 258.28);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2210 0.0394 258.28);
+  --primary: oklch(0.3495 0.0961 255.60);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.9472 0.0137 258.35);
+  --secondary-foreground: oklch(0.3495 0.0961 255.60);
+  --muted: oklch(0.9685 0.0079 253.85);
+  --muted-foreground: oklch(0.5226 0.0419 256.05);
+  --accent: oklch(0.9624 0.0108 256.70);
+  --accent-foreground: oklch(0.3495 0.0961 255.60);
+  --destructive: oklch(0.5013 0.1783 28.70);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9134 0.0156 257.20);
+  --input: oklch(0.6219 0.0512 258.35);
+  --ring: oklch(0.3495 0.0961 255.60);
+
+  --highlight: oklch(0.5430 0.1148 62.14);
+  --highlight-foreground: oklch(1 0 0);
+  --highlight-soft: oklch(0.9600 0.0220 74.10);
+
+  --status-pending: oklch(0.9677 0.0237 79.74);
+  --status-pending-foreground: oklch(0.5085 0.1025 70.83);
+  --status-active: oklch(0.9635 0.0181 161.12);
+  --status-active-foreground: oklch(0.4717 0.0943 158.55);
+  --status-cancelled: oklch(0.9635 0.0045 258.32);
+  --status-cancelled-foreground: oklch(0.5226 0.0419 256.05);
+  --status-expired: oklch(0.9549 0.0163 17.44);
+  --status-expired-foreground: oklch(0.4600 0.1123 22.52);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), var(--font-noto-sans-sc), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-inter), var(--font-noto-sans-sc), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-highlight-soft: var(--highlight-soft);
+
+  --color-status-pending: var(--status-pending);
+  --color-status-pending-foreground: var(--status-pending-foreground);
+  --color-status-active: var(--status-active);
+  --color-status-active-foreground: var(--status-active-foreground);
+  --color-status-cancelled: var(--status-cancelled);
+  --color-status-cancelled-foreground: var(--status-cancelled-foreground);
+  --color-status-expired: var(--status-expired);
+  --color-status-expired-foreground: var(--status-expired-foreground);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-xs: 0 1px 2px 0 oklch(0.2210 0.0394 258.28 / 0.05);
+  --shadow-sm: 0 4px 12px -2px oklch(0.2210 0.0394 258.28 / 0.08);
+  --shadow-md: 0 12px 32px -4px oklch(0.2210 0.0394 258.28 / 0.12);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* 动效降级：prefers-reduced-motion 时全部时长归零，只保留即时的颜色状态切换 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+/* 字号阶梯（design.md §3.2）：移动优先，48rem（md）及以上切到桌面档位。
+   用普通 CSS 类而不是 Tailwind 原子类，是因为这些档位不在 Tailwind 默认刻度上，
+   集中在这里定义比在组件里散落 text-[32px] 这类任意值更好维护。 */
+@layer components {
+  .type-display {
+    font-size: 2.125rem;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  .type-h1 {
+    font-size: 1.75rem;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+  .type-h2 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  .type-h3 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  .type-card-title {
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .type-body-lg {
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+  .type-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+  .type-body-sm {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .type-caption {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .type-eyebrow {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .type-price-lg {
+    font-size: 2.25rem;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  .type-price-md {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  .type-order-no {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  @media (width >= 48rem) {
+    .type-display {
+      font-size: 3.5rem;
+    }
+    .type-h1 {
+      font-size: 2.5rem;
+    }
+    .type-h2 {
+      font-size: 2rem;
+    }
+    .type-h3 {
+      font-size: 1.5rem;
+    }
+    .type-card-title {
+      font-size: 1.125rem;
+    }
+    .type-body-lg {
+      font-size: 1.125rem;
+    }
+    .type-price-lg {
+      font-size: 2.875rem;
+    }
+    .type-price-md {
+      font-size: 1.75rem;
+    }
+  }
+}

@@ -1,0 +1,389 @@
+{
+  "common": {
+    "brand": "AutoShield Insurance",
+    "demoNotice": "This site uses demo data only. It is not a real policy, rate card, or underwriting commitment.",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "errorTitle": "This page failed to load",
+    "errorDesc": "Please try again in a moment, or return to the home page.",
+    "backHome": "Back to home",
+    "viewDetail": "View details",
+    "browseProducts": "Browse plans",
+    "viewAllProducts": "View all plans",
+    "yearSuffix": "/ year",
+    "coverage": "Coverage",
+    "period": "Term",
+    "periodYear": "1 year",
+    "required": "Required",
+    "optional": "Optional",
+    "close": "Close"
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Insurance Plans",
+    "guide": "How to Buy",
+    "about": "About Us"
+  },
+  "header": {
+    "loginRegister": "Sign in / Sign up",
+    "account": "My account",
+    "logout": "Sign out",
+    "openMenu": "Open navigation menu",
+    "menuTitle": "Navigation",
+    "accountMenuLabel": "Account menu",
+    "logoutSuccess": "You have signed out",
+    "switchLanguage": "Switch language",
+    "menuLabel": "Main navigation"
+  },
+  "footer": {
+    "tagline": "A bilingual demo site for browsing car insurance plans and buying a policy online.",
+    "navTitle": "Site navigation",
+    "contactTitle": "Contact",
+    "languageTitle": "Language",
+    "address": "12F, 1000 Century Avenue, Pudong New Area, Shanghai",
+    "phone": "400-000-0000",
+    "email": "support@example.com",
+    "icp": "Shanghai ICP Filing No. 00000000-1",
+    "copyright": "© 2026 AutoShield Insurance (demo site)",
+    "demoNotice": "Demo data: company name, address, phone, and filing number are placeholders."
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "CAR INSURANCE",
+      "titleLine1": "Car insurance you can read",
+      "titleLine2": "What is covered, what it costs",
+      "subtitle": "Six plans across compulsory cover, commercial bundles, and single covers. Prices and coverage limits are published up front, and you can buy online.",
+      "priceLabel": "Annual premium from",
+      "priceSuffix": "",
+      "ctaBrowse": "Browse plans",
+      "ctaGuide": "Read the buying guide"
+    },
+    "products": {
+      "eyebrow": "INSURANCE PRODUCTS",
+      "title": "Insurance Plans",
+      "subtitle": "Pick by need: the compulsory traffic cover, a bundled commercial plan, or a single cover bought on its own."
+    },
+    "guide": {
+      "eyebrow": "HOW TO BUY",
+      "title": "How to Buy",
+      "subtitle": "Four steps to complete a purchase, with the document checklist and common questions in one place.",
+      "cta": "Read the full guide"
+    },
+    "about": {
+      "eyebrow": "ABOUT US",
+      "title": "About Us",
+      "subtitle": "Twelve years in car insurance, helping drivers decide with transparent prices and coverage limits.",
+      "cta": "Learn about us"
+    },
+    "emptyProducts": "No plans available",
+    "emptyProductsDesc": "Plans are being updated. Please check back later."
+  },
+  "products": {
+    "title": "Insurance Plans",
+    "subtitle": "Six plans on sale, with price, coverage limit, and what is covered published in full.",
+    "categoryTitle": "Category",
+    "coverageTitle": "What is covered",
+    "categories": {
+      "statutory": "Compulsory",
+      "commercial-package": "Commercial bundle",
+      "single": "Single cover"
+    },
+    "badges": {
+      "statutory": "Compulsory",
+      "hot": "Best seller",
+      "new": "New"
+    },
+    "empty": "No plans available",
+    "emptyDesc": "Plans are being updated. Please check back later.",
+    "error": "Failed to load plan data",
+    "detail": {
+      "backToList": "Back to all plans",
+      "buyNow": "Buy now",
+      "coveragesTitle": "What is covered",
+      "noticeTitle": "Before you buy",
+      "vehiclesLabel": "Eligible vehicles",
+      "coverageLabel": "Coverage limit",
+      "periodLabel": "Term",
+      "priceNote": "Annual premium, tax included"
+    }
+  },
+  "guide": {
+    "title": "How to Buy",
+    "subtitle": "From picking a plan to the policy taking effect: four steps and four documents, explained once.",
+    "stepsTitle": "Purchase steps",
+    "materialsTitle": "Documents needed",
+    "faqsTitle": "Frequently asked questions",
+    "cta": "Browse plans"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Transparent prices and coverage limits, so drivers can make a decision they understand.",
+    "paragraphs": [
+      "Founded in 2008, AutoShield Insurance is a demo site for a car insurance service provider, offering online compulsory and commercial cover for private car owners.",
+      "We put \"what is covered and what it costs\" first: every plan publishes its price, coverage limit, and service items up front, with no form to fill in and no sales pressure.",
+      "All company details, operating figures, and contact information on this page are placeholders and do not represent any real organisation."
+    ],
+    "statsTitle": "Key figures",
+    "stats": {
+      "drivers": {
+        "label": "Drivers served",
+        "value": "120,000+"
+      },
+      "partners": {
+        "label": "Partner organisations",
+        "value": "300+"
+      },
+      "claimTime": {
+        "label": "Average claim turnaround",
+        "value": "2.5 days"
+      },
+      "founded": {
+        "label": "Founded",
+        "value": "2008"
+      }
+    },
+    "contactTitle": "Contact us",
+    "contactAddress": "Office",
+    "contactPhone": "Support line",
+    "contactEmail": "Support email",
+    "serviceHours": "Support hours: Monday to Sunday, 9:00–20:00",
+    "disclaimerTitle": "Content notice",
+    "disclaimer": "The company name, address, phone number, filing number, and operating figures on this page are placeholders used for demonstration only."
+  },
+  "purchase": {
+    "title": "Enter your details",
+    "subtitle": "Fill in the insured person and vehicle details. Submitting creates an unpaid order.",
+    "summaryTitle": "Selected plan",
+    "insuredLegend": "Insured person",
+    "vehicleLegend": "Vehicle",
+    "feeTitle": "Cost summary",
+    "amountLabel": "Premium due",
+    "submit": "Submit application",
+    "submitting": "Submitting",
+    "success": "Application submitted and the order was created",
+    "fields": {
+      "name": {
+        "label": "Full name",
+        "placeholder": "Name of the insured person"
+      },
+      "idNo": {
+        "label": "ID number",
+        "placeholder": "15 or 18 digit ID number"
+      },
+      "phone": {
+        "label": "Mobile number",
+        "placeholder": "11 digit mobile number"
+      },
+      "plateNo": {
+        "label": "Plate number",
+        "placeholder": "e.g. 沪A12345"
+      },
+      "brandModel": {
+        "label": "Make and model",
+        "placeholder": "e.g. BYD Qin PLUS"
+      },
+      "vin": {
+        "label": "VIN",
+        "placeholder": "17 character VIN"
+      },
+      "registerYear": {
+        "label": "Registration year",
+        "placeholder": "Select a year"
+      }
+    }
+  },
+  "auth": {
+    "dialogTitle": "Sign in / Sign up",
+    "dialogDescription": "Sign in to submit an application and manage your orders.",
+    "loginTab": "Sign in",
+    "registerTab": "Sign up",
+    "username": "Username",
+    "usernamePlaceholder": "2–20 characters, letters, digits or Chinese",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "At least 8 characters with letters and digits",
+    "loginSubmit": "Sign in",
+    "registerSubmit": "Create account",
+    "loginSuccess": "Signed in",
+    "registerSuccess": "Account created and signed in",
+    "sessionExpired": "Your session expired. Please sign in again.",
+    "demoHint": "Demo account: demo@example.com / Demo1234",
+    "requireTitle": "Please sign in first",
+    "requireDesc": "Sign in to continue. You will return to this page automatically.",
+    "requireAction": "Open sign-in window"
+  },
+  "account": {
+    "title": "My Account",
+    "subtitle": "Manage your account details and car insurance orders.",
+    "nav": {
+      "overview": "Overview",
+      "orders": "My Orders",
+      "profile": "Profile",
+      "password": "Password"
+    },
+    "overview": {
+      "accountInfoTitle": "Account details",
+      "username": "Username",
+      "email": "Email",
+      "createdAt": "Registered on",
+      "statsTitle": "Order summary",
+      "statTotal": "Total orders",
+      "statPending": "Awaiting payment",
+      "statActive": "Active",
+      "recentTitle": "Recent orders",
+      "viewAll": "View all",
+      "quickTitle": "Quick links",
+      "quickProfile": "Edit profile",
+      "quickPassword": "Change password",
+      "empty": "No orders yet",
+      "emptyDesc": "You have no orders. Have a look at the plans available for your car."
+    },
+    "orders": {
+      "title": "My Orders",
+      "subtitle": "{count} orders in total, newest first.",
+      "filterAll": "All",
+      "filterPending": "Awaiting payment",
+      "filterActive": "Active",
+      "columns": {
+        "orderNo": "Order number",
+        "product": "Plan",
+        "amount": "Amount",
+        "status": "Status",
+        "createdAt": "Created",
+        "action": "Action"
+      },
+      "viewDetail": "View details",
+      "emptyAll": "No orders yet",
+      "emptyAllDesc": "You have no orders. Have a look at the plans available for your car.",
+      "emptyPending": "No orders awaiting payment",
+      "emptyActive": "No active orders"
+    },
+    "detail": {
+      "title": "Order details",
+      "productCardTitle": "Plan",
+      "insuredCardTitle": "Insured person",
+      "vehicleCardTitle": "Vehicle",
+      "amountCardTitle": "Amount",
+      "timelineCardTitle": "Timeline",
+      "orderNoLabel": "Order number",
+      "productNameLabel": "Plan name",
+      "periodLabel": "Term",
+      "insuredNameLabel": "Full name",
+      "insuredIdNoLabel": "ID number",
+      "insuredPhoneLabel": "Mobile number",
+      "plateNoLabel": "Plate number",
+      "brandModelLabel": "Make and model",
+      "vinLabel": "VIN",
+      "registerYearLabel": "Registration year",
+      "amountLabel": "Amount due",
+      "createdAtLabel": "Ordered at",
+      "effectiveAtLabel": "Effective at",
+      "expireAtLabel": "Expires at",
+      "notAvailable": "—",
+      "pay": "Simulate payment",
+      "paying": "Processing",
+      "cancel": "Cancel order",
+      "cancelling": "Cancelling",
+      "cancelConfirmTitle": "Cancel this order?",
+      "cancelConfirmDesc": "A cancelled order cannot be restored. You would need to submit the application again.",
+      "cancelConfirm": "Yes, cancel it",
+      "cancelDismiss": "Keep the order",
+      "paySuccess": "Payment succeeded and the policy is now active",
+      "cancelSuccess": "Order cancelled",
+      "backToOrders": "Back to my orders"
+    },
+    "profile": {
+      "title": "Edit Profile",
+      "subtitle": "Both the username and the email address can be changed.",
+      "username": "Username",
+      "email": "Email",
+      "createdAt": "Registered on",
+      "save": "Save changes",
+      "saving": "Saving",
+      "saved": "Profile saved"
+    },
+    "password": {
+      "title": "Change Password",
+      "subtitle": "Other sessions are signed out afterwards; this one stays active.",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "submit": "Update password",
+      "submitting": "Submitting",
+      "changed": "Password updated"
+    },
+    "status": {
+      "PENDING": "Awaiting payment",
+      "ACTIVE": "Active",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "username": "Username must be 2–20 characters using letters, digits, or Chinese",
+    "email": "Enter a valid email address",
+    "password": "Password must be at least 8 characters and include both letters and digits",
+    "confirmPassword": "The two passwords do not match",
+    "currentPassword": "Enter your current password",
+    "insuredName": "Name must be 2–20 characters using letters, spaces, or Chinese",
+    "insuredIdNo": "ID number must be 15 or 18 digits; the last digit may be X",
+    "insuredPhone": "Enter an 11 digit mobile number starting with 1",
+    "plateNo": "Plate number must be 2–8 characters using Chinese, capitals, or digits",
+    "brandModel": "Make and model must be 2–40 characters",
+    "vin": "VIN must be 17 characters and cannot contain I, O, or Q",
+    "registerYear": "Select a registration year between 2000 and this year"
+  },
+  "errors": {
+    "OK": "Success",
+    "VALIDATION_ERROR": "Some fields are missing or badly formatted. Please check and try again.",
+    "UNAUTHORIZED": "Your session expired. Please sign in again.",
+    "FORBIDDEN": "You do not have access to this resource.",
+    "NOT_FOUND": "The requested item does not exist or is no longer on sale.",
+    "EMAIL_TAKEN": "That email address is already registered. Try another one.",
+    "DUPLICATE_ORDER": "This vehicle is already insured under this plan, so there is no need to submit again.",
+    "ORDER_NOT_CANCELLABLE": "An order in its current state cannot be changed.",
+    "INVALID_CREDENTIALS": "Incorrect email or password.",
+    "INVALID_PASSWORD": "The current password is incorrect.",
+    "SAME_PASSWORD": "The new password must differ from the current one.",
+    "TOO_WEAK": "The new password must be at least 8 characters and include both letters and digits.",
+    "INTERNAL_ERROR": "Something went wrong on our side. Please try again later.",
+    "UNKNOWN": "The operation failed. Please try again later."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "desc": "The link may have expired, or the plan is no longer available.",
+    "browse": "Browse plans"
+  },
+  "meta": {
+    "home": {
+      "title": "AutoShield Insurance · Buy and manage car insurance online",
+      "description": "Six car insurance plans with published prices and coverage limits. Buy online and manage your orders in your account."
+    },
+    "products": {
+      "title": "Insurance Plans",
+      "description": "Compulsory cover, commercial bundles, and single covers: six car insurance plans with price and coverage published in full."
+    },
+    "guide": {
+      "title": "How to Buy",
+      "description": "The purchase steps, required documents, and common questions for buying car insurance."
+    },
+    "about": {
+      "title": "About Us",
+      "description": "What AutoShield Insurance covers, our key figures, and how to reach us."
+    },
+    "purchase": {
+      "title": "Enter your details",
+      "description": "Fill in the insured person and vehicle details to create an unpaid order."
+    },
+    "account": {
+      "title": "My Account",
+      "description": "Manage your account details, car insurance orders, and password."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you requested does not exist or has expired."
+    }
+  }
+}

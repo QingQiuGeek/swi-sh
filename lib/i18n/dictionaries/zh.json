@@ -1,0 +1,389 @@
+{
+  "common": {
+    "brand": "汽车保险",
+    "demoNotice": "本站为演示数据，不构成任何真实保险条款、费率或承保承诺。",
+    "loading": "加载中…",
+    "retry": "重试",
+    "errorTitle": "页面加载失败",
+    "errorDesc": "请稍后重试，或返回首页继续浏览。",
+    "backHome": "返回首页",
+    "viewDetail": "查看详情",
+    "browseProducts": "浏览保险产品",
+    "viewAllProducts": "查看全部产品",
+    "yearSuffix": "/ 年",
+    "coverage": "保额",
+    "period": "保障期限",
+    "periodYear": "1 年",
+    "required": "必需",
+    "optional": "可选",
+    "close": "关闭"
+  },
+  "nav": {
+    "home": "首页",
+    "products": "保险产品",
+    "guide": "投保指引",
+    "about": "关于我们"
+  },
+  "header": {
+    "loginRegister": "登录 / 注册",
+    "account": "个人中心",
+    "logout": "退出登录",
+    "openMenu": "打开导航菜单",
+    "menuTitle": "导航",
+    "accountMenuLabel": "账户菜单",
+    "logoutSuccess": "已退出登录",
+    "switchLanguage": "切换语言",
+    "menuLabel": "主导航"
+  },
+  "footer": {
+    "tagline": "专注车险产品展示与在线投保的中英双语演示站点。",
+    "navTitle": "站点导航",
+    "contactTitle": "联系方式",
+    "languageTitle": "语言",
+    "address": "上海市浦东新区世纪大道 1000 号 12 层",
+    "phone": "400-000-0000",
+    "email": "support@example.com",
+    "icp": "沪ICP备00000000号-1",
+    "copyright": "© 2026 汽车保险（演示站点）",
+    "demoNotice": "演示数据：公司名称、地址、电话与备案号均为占位内容。"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "CAR INSURANCE",
+      "titleLine1": "看得懂的车险",
+      "titleLine2": "保什么、多少钱一目了然",
+      "subtitle": "6 款车险产品覆盖法定险、商业险套餐与单险种，价格与保额公开可比，在线即可完成投保。",
+      "priceLabel": "年保费 低至",
+      "priceSuffix": "起",
+      "ctaBrowse": "浏览保险产品",
+      "ctaGuide": "查看投保指引"
+    },
+    "products": {
+      "eyebrow": "INSURANCE PRODUCTS",
+      "title": "保险产品",
+      "subtitle": "按保障需求挑选：法定必投的交强险，一次配齐的商业险套餐，或按需单买的独立险种。"
+    },
+    "guide": {
+      "eyebrow": "HOW TO BUY",
+      "title": "投保指引",
+      "subtitle": "四步完成投保，所需材料与常见问题一次说清。",
+      "cta": "查看完整投保指引"
+    },
+    "about": {
+      "eyebrow": "ABOUT US",
+      "title": "关于我们",
+      "subtitle": "十二年专注车险服务，用透明的价格与保额帮车主做决定。",
+      "cta": "了解我们"
+    },
+    "emptyProducts": "暂无在售产品",
+    "emptyProductsDesc": "产品正在调整上架，请稍后再来。"
+  },
+  "products": {
+    "title": "保险产品",
+    "subtitle": "6 款在售车险，价格、保额与服务内容全部公开。",
+    "categoryTitle": "类别",
+    "coverageTitle": "服务内容",
+    "categories": {
+      "statutory": "法定必投",
+      "commercial-package": "商业险套餐",
+      "single": "单险种"
+    },
+    "badges": {
+      "statutory": "法定",
+      "hot": "热销",
+      "new": "新品"
+    },
+    "empty": "暂无在售产品",
+    "emptyDesc": "产品正在调整上架，请稍后再来。",
+    "error": "产品数据加载失败",
+    "detail": {
+      "backToList": "返回产品列表",
+      "buyNow": "立即投保",
+      "coveragesTitle": "服务内容明细",
+      "noticeTitle": "投保须知",
+      "vehiclesLabel": "适用车型",
+      "coverageLabel": "保额",
+      "periodLabel": "保障期限",
+      "priceNote": "年保费，含税"
+    }
+  },
+  "guide": {
+    "title": "投保指引",
+    "subtitle": "从选产品到保单生效，四个步骤、四份材料，一次讲清楚。",
+    "stepsTitle": "投保流程",
+    "materialsTitle": "所需材料",
+    "faqsTitle": "常见问题",
+    "cta": "浏览保险产品"
+  },
+  "about": {
+    "title": "关于我们",
+    "subtitle": "用透明的价格与保额，帮车主做出看得懂的投保决定。",
+    "paragraphs": [
+      "汽车保险成立于 2008 年，是一家专注家用车险的服务机构演示站点，为个人车主提供交强险与商业险的在线投保服务。",
+      "我们把「保什么、多少钱」放在页面的第一位置：每款产品的价格、保额与服务内容全部公开，不需要填表就能看到，也不做推销式的话术包装。",
+      "本页面所有公司信息、经营数据与联系方式均为演示占位内容，不代表任何真实机构。"
+    ],
+    "statsTitle": "核心数据",
+    "stats": {
+      "drivers": {
+        "label": "服务车主",
+        "value": "120,000+"
+      },
+      "partners": {
+        "label": "合作机构",
+        "value": "300+"
+      },
+      "claimTime": {
+        "label": "平均理赔时效",
+        "value": "2.5 天"
+      },
+      "founded": {
+        "label": "成立年份",
+        "value": "2008"
+      }
+    },
+    "contactTitle": "联系方式",
+    "contactAddress": "办公地址",
+    "contactPhone": "客服电话",
+    "contactEmail": "客服邮箱",
+    "serviceHours": "服务时间：周一至周日 9:00–20:00",
+    "disclaimerTitle": "内容声明",
+    "disclaimer": "本页公司名称、地址、电话、备案号与经营数据均为占位内容，仅用于功能演示。"
+  },
+  "purchase": {
+    "title": "投保信息填写",
+    "subtitle": "填写被保人与车辆信息，提交后生成待支付订单。",
+    "summaryTitle": "投保产品",
+    "insuredLegend": "被保人信息",
+    "vehicleLegend": "车辆信息",
+    "feeTitle": "费用确认",
+    "amountLabel": "应付保费",
+    "submit": "提交投保",
+    "submitting": "提交中",
+    "success": "投保成功，订单已生成",
+    "fields": {
+      "name": {
+        "label": "姓名",
+        "placeholder": "请输入被保人姓名"
+      },
+      "idNo": {
+        "label": "证件号",
+        "placeholder": "15 位或 18 位身份证号"
+      },
+      "phone": {
+        "label": "手机号",
+        "placeholder": "11 位手机号"
+      },
+      "plateNo": {
+        "label": "车牌号",
+        "placeholder": "例如 沪A12345"
+      },
+      "brandModel": {
+        "label": "品牌型号",
+        "placeholder": "例如 比亚迪 秦 PLUS"
+      },
+      "vin": {
+        "label": "车架号 VIN",
+        "placeholder": "17 位车架号"
+      },
+      "registerYear": {
+        "label": "注册年份",
+        "placeholder": "请选择注册年份"
+      }
+    }
+  },
+  "auth": {
+    "dialogTitle": "登录 / 注册",
+    "dialogDescription": "登录后可以提交投保并管理订单。",
+    "loginTab": "登录",
+    "registerTab": "注册",
+    "username": "用户名",
+    "usernamePlaceholder": "2–20 个字符，可含中英文与数字",
+    "email": "邮箱",
+    "emailPlaceholder": "you@example.com",
+    "password": "密码",
+    "passwordPlaceholder": "至少 8 位，含字母与数字",
+    "loginSubmit": "登录",
+    "registerSubmit": "注册",
+    "loginSuccess": "登录成功",
+    "registerSuccess": "注册成功，已自动登录",
+    "sessionExpired": "登录状态已过期，请重新登录",
+    "demoHint": "演示账号：demo@example.com / Demo1234",
+    "requireTitle": "请先登录",
+    "requireDesc": "登录后即可继续当前操作，登录成功会自动回到本页。",
+    "requireAction": "打开登录窗口"
+  },
+  "account": {
+    "title": "个人中心",
+    "subtitle": "管理你的账户信息与车险订单。",
+    "nav": {
+      "overview": "概览",
+      "orders": "我的订单",
+      "profile": "修改资料",
+      "password": "修改密码"
+    },
+    "overview": {
+      "accountInfoTitle": "账户信息",
+      "username": "用户名",
+      "email": "邮箱",
+      "createdAt": "注册时间",
+      "statsTitle": "订单统计",
+      "statTotal": "订单总数",
+      "statPending": "待支付",
+      "statActive": "已生效",
+      "recentTitle": "最近订单",
+      "viewAll": "查看全部",
+      "quickTitle": "快捷入口",
+      "quickProfile": "修改资料",
+      "quickPassword": "修改密码",
+      "empty": "暂无订单",
+      "emptyDesc": "还没有订单，去看看适合你的车险产品。"
+    },
+    "orders": {
+      "title": "我的订单",
+      "subtitle": "共 {count} 笔订单，按创建时间倒序排列。",
+      "filterAll": "全部",
+      "filterPending": "待支付",
+      "filterActive": "已生效",
+      "columns": {
+        "orderNo": "订单号",
+        "product": "产品",
+        "amount": "金额",
+        "status": "状态",
+        "createdAt": "创建时间",
+        "action": "操作"
+      },
+      "viewDetail": "查看详情",
+      "emptyAll": "还没有订单",
+      "emptyAllDesc": "还没有订单，去看看适合你的车险产品。",
+      "emptyPending": "没有待支付的订单",
+      "emptyActive": "没有已生效的订单"
+    },
+    "detail": {
+      "title": "订单详情",
+      "productCardTitle": "产品信息",
+      "insuredCardTitle": "被保人信息",
+      "vehicleCardTitle": "车辆信息",
+      "amountCardTitle": "金额",
+      "timelineCardTitle": "时间线",
+      "orderNoLabel": "订单号",
+      "productNameLabel": "产品名称",
+      "periodLabel": "保障期限",
+      "insuredNameLabel": "姓名",
+      "insuredIdNoLabel": "证件号",
+      "insuredPhoneLabel": "手机号",
+      "plateNoLabel": "车牌号",
+      "brandModelLabel": "品牌型号",
+      "vinLabel": "车架号 VIN",
+      "registerYearLabel": "注册年份",
+      "amountLabel": "应付金额",
+      "createdAtLabel": "下单时间",
+      "effectiveAtLabel": "生效时间",
+      "expireAtLabel": "到期时间",
+      "notAvailable": "—",
+      "pay": "模拟支付",
+      "paying": "支付中",
+      "cancel": "取消订单",
+      "cancelling": "取消中",
+      "cancelConfirmTitle": "确认取消该订单？",
+      "cancelConfirmDesc": "取消后订单不可恢复，如需继续投保需要重新提交。",
+      "cancelConfirm": "确认取消",
+      "cancelDismiss": "再想想",
+      "paySuccess": "支付成功，保单已生效",
+      "cancelSuccess": "订单已取消",
+      "backToOrders": "返回我的订单"
+    },
+    "profile": {
+      "title": "修改资料",
+      "subtitle": "用户名与邮箱都可以修改。",
+      "username": "用户名",
+      "email": "邮箱",
+      "createdAt": "注册时间",
+      "save": "保存修改",
+      "saving": "保存中",
+      "saved": "资料已保存"
+    },
+    "password": {
+      "title": "修改密码",
+      "subtitle": "修改成功后其他设备的登录会失效，当前会话保留。",
+      "current": "当前密码",
+      "new": "新密码",
+      "confirm": "确认新密码",
+      "submit": "确认修改",
+      "submitting": "提交中",
+      "changed": "密码已修改"
+    },
+    "status": {
+      "PENDING": "待支付",
+      "ACTIVE": "已生效",
+      "CANCELLED": "已取消",
+      "EXPIRED": "已失效"
+    }
+  },
+  "validation": {
+    "required": "此项为必填项",
+    "username": "用户名为 2–20 个字符，可含中英文与数字",
+    "email": "请输入有效的邮箱地址",
+    "password": "密码至少 8 位，且同时包含字母与数字",
+    "confirmPassword": "两次输入的密码不一致",
+    "currentPassword": "请输入当前密码",
+    "insuredName": "姓名需为 2–20 个字符，可含中英文与空格",
+    "insuredIdNo": "证件号为 15 位或 18 位，18 位末位可为 X",
+    "insuredPhone": "请输入 11 位手机号，以 1 开头",
+    "plateNo": "车牌号为 2–8 位，可含中文、大写字母与数字",
+    "brandModel": "品牌型号需为 2–40 个字符",
+    "vin": "车架号为 17 位，且不含 I、O、Q",
+    "registerYear": "请选择 2000 年至今的注册年份"
+  },
+  "errors": {
+    "OK": "操作成功",
+    "VALIDATION_ERROR": "提交的内容不完整或格式不正确，请检查后重试。",
+    "UNAUTHORIZED": "登录状态已过期，请重新登录。",
+    "FORBIDDEN": "没有权限访问该资源。",
+    "NOT_FOUND": "请求的内容不存在或已下架。",
+    "EMAIL_TAKEN": "该邮箱已被注册，请换一个。",
+    "DUPLICATE_ORDER": "该车辆已投保此产品，无需重复提交。",
+    "ORDER_NOT_CANCELLABLE": "当前订单状态不支持该操作。",
+    "INVALID_CREDENTIALS": "邮箱或密码错误。",
+    "INVALID_PASSWORD": "当前密码不正确。",
+    "SAME_PASSWORD": "新密码不能与当前密码相同。",
+    "TOO_WEAK": "新密码至少 8 位，且同时包含字母与数字。",
+    "INTERNAL_ERROR": "服务出现异常，请稍后重试。",
+    "UNKNOWN": "操作失败，请稍后重试。"
+  },
+  "notFound": {
+    "title": "页面不存在",
+    "desc": "链接可能已失效，或该产品已下架。",
+    "browse": "浏览保险产品"
+  },
+  "meta": {
+    "home": {
+      "title": "汽车保险 · 在线投保与订单管理",
+      "description": "6 款车险产品，价格与保额公开可比，在线完成投保并在个人中心管理订单。"
+    },
+    "products": {
+      "title": "保险产品",
+      "description": "交强险、商业险套餐与单险种共 6 款车险产品，价格、保额与服务内容全部公开。"
+    },
+    "guide": {
+      "title": "投保指引",
+      "description": "投保流程、所需材料与常见问题，四步完成车险投保。"
+    },
+    "about": {
+      "title": "关于我们",
+      "description": "了解汽车保险的服务范围、核心数据与联系方式。"
+    },
+    "purchase": {
+      "title": "投保信息填写",
+      "description": "填写被保人与车辆信息，提交后生成待支付订单。"
+    },
+    "account": {
+      "title": "个人中心",
+      "description": "管理账户信息、车险订单与登录密码。"
+    },
+    "notFound": {
+      "title": "页面不存在",
+      "description": "请求的页面不存在或已失效。"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "steps": {
+    "choose": { "title": "Choose a plan", "desc": "Compare price, coverage limit, and what is covered, then pick the plan that fits your car.", "duration": "About 5 minutes" },
+    "fill": { "title": "Fill in your details", "desc": "Enter the insured person and vehicle details. Double-check the plate number and VIN before submitting.", "duration": "About 10 minutes" },
+    "pay": { "title": "Pay the premium online", "desc": "Confirm the amount, submit the order, and complete the payment. This demo uses a simulated payment flow.", "duration": "About 2 minutes" },
+    "effective": { "title": "Policy takes effect", "desc": "Once paid, the policy takes effect within one business day. You can follow the order in your account.", "duration": "1 business day" }
+  },
+  "materials": {
+    "driving-license": { "name": "Vehicle licence", "desc": "Used to verify the plate number, VIN, and vehicle type." },
+    "owner-id": { "name": "Owner identity document", "desc": "The insured person should match the registered owner; otherwise provide an authorisation document." },
+    "registration-certificate": { "name": "Vehicle title certificate", "desc": "Recommended for a transfer or a first-time purchase, to confirm ownership." },
+    "last-policy": { "name": "Previous year's policy", "desc": "Required when renewing, to confirm the claims record and renewal discount." }
+  },
+  "faqs": {
+    "premium": { "question": "How is the premium calculated?", "answer": "The premium depends on the vehicle's purchase price, age, the covers selected, and last year's claims record. The rates shown here are demo figures; the real premium is set by the insurer after underwriting." },
+    "refund": { "question": "Can I cancel the policy mid-term?", "answer": "Yes. After the policy takes effect you can request cancellation and the premium is refunded pro rata for the remaining days. Previous claims do not block the request." },
+    "effective-time": { "question": "How soon does the policy take effect?", "answer": "Within one business day after payment. The vehicle must not be driven before the policy takes effect; driving without valid compulsory cover is illegal." },
+    "vehicle-types": { "question": "Which vehicles are supported?", "answer": "Private cars and non-commercial passenger vehicles for now. Commercial vehicles, special-purpose vehicles, and motorcycles cannot be insured online yet." },
+    "invoice": { "question": "How do I get an invoice?", "answer": "Once the policy takes effect you can request one from your account. The e-invoice is sent to your account email within three business days." }
+  }
+}

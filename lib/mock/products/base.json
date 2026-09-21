@@ -1,0 +1,68 @@
+[
+  {
+    "id": "prd-compulsory-traffic",
+    "slug": "compulsory-traffic",
+    "category": "statutory",
+    "price": 950,
+    "coverageAmount": 200000,
+    "period": "1y",
+    "badge": "statutory",
+    "active": true,
+    "sortOrder": 1
+  },
+  {
+    "id": "prd-commercial-basic",
+    "slug": "commercial-basic",
+    "category": "commercial-package",
+    "price": 1280,
+    "coverageAmount": 500000,
+    "period": "1y",
+    "badge": null,
+    "active": true,
+    "sortOrder": 2
+  },
+  {
+    "id": "prd-commercial-comfort",
+    "slug": "commercial-comfort",
+    "category": "commercial-package",
+    "price": 2680,
+    "coverageAmount": 1000000,
+    "period": "1y",
+    "badge": "hot",
+    "active": true,
+    "sortOrder": 3
+  },
+  {
+    "id": "prd-commercial-premium",
+    "slug": "commercial-premium",
+    "category": "commercial-package",
+    "price": 4580,
+    "coverageAmount": 2000000,
+    "period": "1y",
+    "badge": "new",
+    "active": true,
+    "sortOrder": 4
+  },
+  {
+    "id": "prd-third-party-liability",
+    "slug": "third-party-liability",
+    "category": "single",
+    "price": 1150,
+    "coverageAmount": 1000000,
+    "period": "1y",
+    "badge": null,
+    "active": true,
+    "sortOrder": 5
+  },
+  {
+    "id": "prd-own-damage",
+    "slug": "own-damage",
+    "category": "single",
+    "price": 1860,
+    "coverageAmount": null,
+    "period": "1y",
+    "badge": null,
+    "active": true,
+    "sortOrder": 6
+  }
+]

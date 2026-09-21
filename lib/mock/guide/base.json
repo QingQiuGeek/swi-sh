@@ -1,0 +1,21 @@
+{
+  "steps": [
+    { "id": "choose", "sortOrder": 1 },
+    { "id": "fill", "sortOrder": 2 },
+    { "id": "pay", "sortOrder": 3 },
+    { "id": "effective", "sortOrder": 4 }
+  ],
+  "materials": [
+    { "id": "driving-license", "required": true },
+    { "id": "owner-id", "required": true },
+    { "id": "registration-certificate", "required": false },
+    { "id": "last-policy", "required": true }
+  ],
+  "faqs": [
+    { "id": "premium" },
+    { "id": "refund" },
+    { "id": "effective-time" },
+    { "id": "vehicle-types" },
+    { "id": "invoice" }
+  ]
+}
