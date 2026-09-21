@@ -1,7 +1,7 @@
 # 汽车保险网站 UI 架构规范
 
-> 版本：v0.1
-> 上游：`prd.md` v0.4（功能与路由）、`visual.md` v0.1（视觉方向）、`design.md` v0.1（设计令牌）
+> 版本：v0.2
+> 上游：`prd.md` v0.7（功能与路由）、`visual.md` v0.1（视觉方向）、`design.md` v0.1（设计令牌）
 > 本文回答**「UI 怎么搭」**：分层模型、目录结构、组件与区块规范、复用规则、状态规范、导航交互模式、路由实现规则、全局页面结构。
 > 下游：`page-specs.md`（每页具体怎么搭）。
 
@@ -113,6 +113,8 @@ lib/
   validation/                       # zod schema，前端表单与服务端接口共用同一份规则
   api-client.ts                     # 客户端统一 fetch 封装：解包 ApiResponse、统一处理 401
   utils.ts                          # cn()（shadcn init 生成）
+docs/                               # 六份规格文档（prd / visual / design / ui-patterns / page-specs / avoid）
+frontend-dev-skill/                 # 开发流程提炼出的通用 skill：SKILL.md + references/（六份文档骨架）+ agents/
 ```
 
 ---

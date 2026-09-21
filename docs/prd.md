@@ -1,6 +1,6 @@
 # 汽车保险网站 PRD
 
-> 版本：v0.6（已对齐）
+> 版本：v0.7（已对齐）
 > 定位：需求基线。下游 `visual.md`（长什么样）、`design.md`（设计规范）、`ui-patterns.md`（UI 怎么搭）、`page-specs.md`（每页怎么搭）均以本文为准。
 > 变更记录：
 > - v0.2：存储改为后端内存结构、产品清单与价格定稿、品牌信息确定。
@@ -8,6 +8,7 @@
 > - v0.4：会话改为滑动续期、确认修改资料可改邮箱、确认品牌视觉方向。
 > - v0.5：统一响应体定稿（success / code / message / data），业务码与 HTTP 状态码建立对照，并确定字段级校验归属前端。
 > - v0.6：订单号改为 UUID v4，去掉 orderNo 字段与订单号自增序列。
+> - v0.7：存储由服务端进程内存改为 Upstash Redis（修复 Vercel 多实例下登录态丢失）；补充线上部署地址；开发流程提炼为通用 skill `frontend-dev-skill/`。
 > 决策记录见 §12。
 
 ---
@@ -267,6 +268,9 @@ Header 右侧用户名 /「个人中心」
 | 数据存储 | Upstash Redis（`@upstash/redis`），账户 / 会话 / 订单 / 聊天记录跨实例共享 | 已实现 |
 | 包管理 | npm | 已具备 |
 | 路由形态 | App Router 真实路由，URL 首段为语言，无 hash 路由 | — |
+| 部署 | Vercel，从 `main` 分支自动构建部署 | 已上线 |
+
+**线上地址**：<https://swi-sh.vercel.app/zh>（英文入口 <https://swi-sh.vercel.app/en>）。Vercel 上每个 Route Handler 都是独立函数实例，这也是存储必须放在 Redis 这类外部共享存储的原因（见 §10.3）。
 
 **JSON 支持**：`tsconfig.json` 已开启 `resolveJsonModule`，字典与 mock 数据可直接 `import`；路径别名 `@/*` 已可用。
 
@@ -304,6 +308,8 @@ lib/
       en.json
   server/              # Redis 数据访问层与业务逻辑
   types/               # 共享类型定义
+docs/                  # 需求与设计文档（prd / visual / design / ui-patterns / page-specs / avoid）
+frontend-dev-skill/    # 本次开发提炼的通用前端开发 skill（六份文档骨架模板 + 验收清单）
 ```
 
 ---

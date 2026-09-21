@@ -1,7 +1,7 @@
 # 汽车保险网站 禁止清单
 
 > 版本：v0.1
-> 上游：`prd.md` v0.6、`visual.md` v0.1、`design.md` v0.1、`ui-patterns.md` v0.1、`page-specs.md` v0.1
+> 上游：`prd.md` v0.7、`visual.md` v0.1、`design.md` v0.1、`ui-patterns.md` v0.2、`page-specs.md` v0.1
 > 本文回答**「什么不要做」**。所有条目都是明确取舍的结果，不是风格偏好；实现阶段任一条被违反即视为未完成。
 > 与上游文档冲突时，以本文为准。
 

@@ -1,7 +1,7 @@
 # 汽车保险网站 页面规格
 
 > 版本：v0.1
-> 上游：`prd.md` v0.5（路由与业务规则）、`visual.md` v0.1、`design.md` v0.1、`ui-patterns.md` v0.1
+> 上游：`prd.md` v0.7（路由与业务规则）、`visual.md` v0.1、`design.md` v0.1、`ui-patterns.md` v0.2
 > 本文回答**「每个页面具体怎么搭」**：页面内容、Route、页面结构、使用的 Components/Blocks、核心操作、数据、状态、响应式、页面间跳转。
 > 阅读方式：先看 §1 全局外壳与 §2 导航地图，再按页查阅。每页的结构树可直接作为实现顺序。
 

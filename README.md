@@ -22,7 +22,8 @@
 
 ### 线上部署
 
-- 部署平台：**Vercel**
+- 线上地址：<https://swi-sh.vercel.app/zh>（英文入口 <https://swi-sh.vercel.app/en>）
+- 部署平台：**Vercel**，从 `main` 分支自动构建部署
 - 语言入口：`/zh`（默认）、`/en`；访问 `/` 会按「语言 Cookie → `Accept-Language` → `zh`」重定向
 - 不使用 hash 路由，全部走 App Router 真实路由
 
@@ -36,6 +37,7 @@
 | UI 组件 | shadcn/ui（`radix-nova` 风格，基于 Radix UI）、lucide-react 图标 |
 | 表单与校验 | react-hook-form + zod + `@hookform/resolvers`（前后端共用 zod schema） |
 | 国际化 | 自建 i18n：`lib/i18n` + `middleware.ts`，URL 语言前缀 + `NEXT_LOCALE` Cookie，字典 `zh.json` / `en.json` |
+| 数据存储 | `@upstash/redis`（Upstash Redis）：账户 / 会话 / 订单 / 客服聊天记录，多实例与 Serverless 共享同一份状态 |
 | AI 客服 | AI SDK 7（`ToolLoopAgent` + zod 工具）、`@ai-sdk/react` 的 `useChat`、AI Elements 对话组件、`@ai-sdk/openai-compatible` 接 OpenAI 兼容模型、streamdown 渲染 Markdown |
 | 其他 | sonner（toast）、next-themes（主题）、use-stick-to-bottom（对话吸底） |
 | 代码检查 | ESLint 9 + `eslint-config-next` |
@@ -78,7 +80,7 @@
   - `searchProducts`：查产品（关键词 / 类别 / 价格上限），**必须先查再答，禁止编造价格与保障**
   - `queryOrders`：按 `userId` 查本人真实订单；未登录或 `userId` 与会话不符时返回 `requiresLogin`，助手只提示「请先注册登录」
 - 登录态一律由服务端读 Cookie 判定，前端传参无法绕过
-- 会话：浏览器用 `localStorage` 保存会话 id，服务端用 `Map` 维护「会话 id → 消息列表」，**登录后发消息即把该会话绑定到 `userId`**，绑定后仅本人可读
+- 会话：浏览器用 `localStorage` 保存会话 id，服务端在 Redis（`swi:chat:<sessionId>`，7 天 TTL）维护「会话 id → 消息列表」，**登录后发消息即把该会话绑定到 `userId`**，绑定后仅本人可读
 
 **全局**
 
@@ -137,6 +139,7 @@ lib/
 ├── types/               # 共享类型（含统一响应体 ApiResponse）
 └── hooks/               # 分区滚动、高亮跟随
 docs/                    # 需求与设计文档（prd / visual / design / ui-patterns / page-specs / avoid）
+frontend-dev-skill/      # 本次开发提炼的通用前端开发 skill（含六份文档的骨架模板）
 ```
 
 ### 快速开始
@@ -185,7 +188,17 @@ Redis 两项也接受无前缀名（`KV_REST_API_URL`、`KV_REST_API_TOKEN`、`U
 
 ### 项目文档
 
-`docs/` 下按职责拆分：`prd.md`（做什么）、`visual.md`（视觉方向）、`design.md`（具体设计规范）、`ui-patterns.md`（UI 分层与代码规范）、`page-specs.md`（逐页规格）、`avoid.md`（不要做什么）。
+`docs/` 下按职责拆分：`prd.md`（做什么）、`visual.md`（视觉方向）、`design.md`（具体设计规范）、`ui-patterns.md`（UI 分层与代码规范）、`page-specs.md`（逐页规格）、`avoid.md`（不要做什么）。六份文档各有唯一职责，一件事只写在一份里，其它文档只引用不复述。
+
+### 前端开发 Skill（`frontend-dev-skill/`）
+
+本项目的开发流程已提炼成一个可复用的通用 skill，放在仓库根目录 `frontend-dev-skill/`，可直接拷进其它前端项目：
+
+- **`SKILL.md`**：主流程——**先把六份文档写出来，再写代码**。含六份文档的分工表、七种按需读取模式（prd / visual / design / ui-patterns / page-specs / avoid / build-accept）、需求变更后的回写规则
+- **`references/`**：六份文档的骨架模板，外加 `acceptance.md`（执行纪律、按模块验收、最终整体验收与证据要求）
+- **`agents/openai.yaml`**：Agent 配置（展示名与默认提示词）
+
+本仓库的 `docs/` 就是按这套流程产出的实例。
 
 ---
 
@@ -207,7 +220,8 @@ All product, guide and case data is mocked; accounts, sessions, orders and suppo
 
 ### Deployment
 
-- Hosted on **Vercel**
+- Live site: <https://swi-sh.vercel.app/zh> (English: <https://swi-sh.vercel.app/en>)
+- Hosted on **Vercel**, built and deployed automatically from the `main` branch
 - Locale entry points: `/zh` (default) and `/en`; visiting `/` redirects by language cookie → `Accept-Language` → `zh`
 - No hash routing: everything uses real App Router routes
 
@@ -221,6 +235,7 @@ All product, guide and case data is mocked; accounts, sessions, orders and suppo
 | UI kit | shadcn/ui (`radix-nova` style, Radix UI primitives), lucide-react |
 | Forms & validation | react-hook-form + zod (shared schemas between client and server) |
 | i18n | Custom: `lib/i18n` + `middleware.ts`, locale-prefixed URLs, `NEXT_LOCALE` cookie, `zh.json` / `en.json` dictionaries |
+| Storage | `@upstash/redis` (Upstash Redis) for accounts, sessions, orders and support-chat history — one shared state across instances and serverless invocations |
 | AI assistant | AI SDK 7 (`ToolLoopAgent` + zod tools), `useChat` from `@ai-sdk/react`, AI Elements chat components, `@ai-sdk/openai-compatible` provider, streamdown for Markdown |
 | Misc | sonner (toasts), next-themes, use-stick-to-bottom |
 | Linting | ESLint 9 + `eslint-config-next` |
@@ -263,7 +278,7 @@ All product, guide and case data is mocked; accounts, sessions, orders and suppo
   - `searchProducts` — looks up plans by keyword, category or price ceiling; the model must call it before quoting prices or coverage
   - `queryOrders` — returns the signed-in user's own orders; when signed out (or when the passed `userId` does not match the session) it returns `requiresLogin` and the assistant asks the user to sign in
 - Auth state is always resolved server-side from the cookie, so it cannot be spoofed by the client
-- Chat history: the browser keeps a session id in `localStorage`, the server keeps a `Map` from session id to messages, and the session is bound to `userId` once the user sends a message while signed in
+- Chat history: the browser keeps a session id in `localStorage`; the server keeps the session id → messages mapping in Redis (`swi:chat:<sessionId>`, 7-day TTL), and the session is bound to `userId` once the user sends a message while signed in
 
 **Global**
 
@@ -347,4 +362,14 @@ Without the AI variables, products, orders and accounts still work — only the 
 
 ### Documentation
 
-The `docs/` folder holds the project specs: `prd.md` (what to build), `visual.md` (visual direction), `design.md` (design tokens and rules), `ui-patterns.md` (UI layers and code conventions), `page-specs.md` (per-page specs) and `avoid.md` (anti-patterns).
+The `docs/` folder holds the project specs: `prd.md` (what to build), `visual.md` (visual direction), `design.md` (design tokens and rules), `ui-patterns.md` (UI layers and code conventions), `page-specs.md` (per-page specs) and `avoid.md` (anti-patterns). Each document owns exactly one concern and the others reference it instead of restating it.
+
+### Frontend Dev Skill (`frontend-dev-skill/`)
+
+The workflow behind this project is packaged as a reusable skill under `frontend-dev-skill/`, ready to drop into any other frontend repo:
+
+- **`SKILL.md`** — the main workflow: **write the six spec docs before writing code**. Covers the responsibility split between the docs, the seven on-demand modes (prd / visual / design / ui-patterns / page-specs / avoid / build-accept) and the write-back rules for requirement changes
+- **`references/`** — skeleton templates for the six docs plus `acceptance.md` (execution discipline, per-module acceptance, final end-to-end acceptance and evidence requirements)
+- **`agents/openai.yaml`** — agent configuration (display name and default prompt)
+
+The `docs/` folder in this repo is the concrete output of that workflow.
