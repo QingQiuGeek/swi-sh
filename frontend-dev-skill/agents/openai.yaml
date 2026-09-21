@@ -1,4 +1,4 @@
 interface:
-  display_name: "Frontend Spec Docs"
+  display_name: "Frontend Dev Skill"
   short_description: "Spec-driven frontend docs, build, and acceptance"
-  default_prompt: "Use $frontend-spec-docs to write the six spec docs under wz-docs/ and implement against them."
+  default_prompt: "Use $frontend-dev-skill to write the six spec docs under wz-docs/ and implement against them."

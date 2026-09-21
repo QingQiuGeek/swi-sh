@@ -1,5 +1,5 @@
 ---
-name: frontend-spec-docs
+name: frontend-dev-skill
 description: Spec-driven frontend work — write and maintain prd / visual / design / ui-patterns / page-specs / avoid under wz-docs/, gate coding on them, then implement and verify module by module. Use when starting a frontend project, page, or feature; when the user asks for any of those docs; or when UI work is about to begin and the specs are missing. Not for backend-only, script, or non-UI tasks.
 metadata:
   short-description: Spec-driven frontend docs, build, and acceptance
