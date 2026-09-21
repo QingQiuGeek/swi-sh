@@ -1,4 +1,4 @@
-U4-契约 OK U3-表单态 OK U2-types OK U1-server OK E-ui-patterns 指针 OK # 汽车保险网站 UI 架构规范
+# 汽车保险网站 UI 架构规范
 
 > 版本：v0.1
 > 上游：`prd.md` v0.4（功能与路由）、`visual.md` v0.1（视觉方向）、`design.md` v0.1（设计令牌）
@@ -21,12 +21,13 @@ Tokens   →  Components   →  Blocks   →  Pages
 | Tokens | `app/globals.css` | 语义色、圆角、阴影、字体变量 | 组件里写原始色值 |
 | Components | `components/ui/` | shadcn 原子组件，纯通用 | 写业务文案、发请求、读 store、import `lib/server` |
 | Blocks | `components/blocks/` | 有业务语义、可跨页面复用的一块 UI | 自己发请求；越权直接读 `lib/server` |
+| AI Elements | `components/ai-elements/` | Vercel 官方基于 shadcn 的对话组件（`Conversation` / `Message` / `PromptInput`），以源码形式落进仓库，可改；重装时 CLI 会逐个询问是否覆盖 | 写业务文案、读 `lib/server` |
 | Pages | `app/[locale]/**` | 取数、鉴权、路由、编排 Block | 写视觉细节、写原始色值 |
 
 补充两层，职责介于 Blocks 与 Pages 之间：
 
-- `components/sections/` —— **仅首页使用**的分区编排（首页四分区），不跨页复用。
-- `components/layout/` —— 全站骨架（Header / Footer / Container / 移动端抽屉 / 语言切换 / 滚动指示轨）。
+- `components/sections/` —— **仅首页使用**的分区编排（首页五分区），不跨页复用；首屏视频层 `hero-media.tsx` 也在这里（它是 Hero 内部唯一需要交互状态的叶子）。
+- `components/layout/` —— 全站骨架（Header / Footer / Container / 移动端抽屉 / 语言切换 / 滚动指示轨 / 悬浮工具轨）。
 - `components/forms/`、`components/auth/` —— 有交互状态的重型 Block（投保表单、账户表单、登录注册弹窗）。
 
 **判断归属的一句话规则**：这段 UI 换一个页面还能用吗？能 → Blocks；只有首页用 → Sections；带交互状态且体积大 → 独立的 `forms/`、`auth/`。
@@ -41,7 +42,7 @@ app/
   globals.css                       # design.md §2.6 的令牌
   [locale]/
     layout.tsx                      # 校验 locale、注入字典、渲染 Header/Footer/AuthDialog/Toaster
-    page.tsx                        # 首页（四分区）
+    page.tsx                        # 首页（五分区）
     not-found.tsx
     products/page.tsx               # 产品列表
     products/[slug]/page.tsx        # 产品详情
@@ -59,6 +60,7 @@ app/
     products/route.ts               # GET 列表
     products/[slug]/route.ts        # GET 详情
     guide/route.ts                  # GET 投保指引
+    cases/route.ts                  # GET 投保案例
     auth/register/route.ts          # POST
     auth/login/route.ts             # POST
     auth/logout/route.ts            # POST
@@ -74,14 +76,20 @@ components/
   ui/                               # shadcn 生成的原子组件
   layout/                           # header.tsx footer.tsx container.tsx
                                     # mobile-nav.tsx language-switcher.tsx scroll-rail.tsx
-  sections/                         # hero-section.tsx products-section.tsx
-                                    # guide-section.tsx about-section.tsx
+                                    # floating-tools.tsx（首页右侧悬浮工具轨）
+  sections/                         # hero-section.tsx hero-media.tsx
+                                    # products-section.tsx
+                                    # guide-section.tsx cases-section.tsx about-section.tsx
   blocks/                           # section-heading.tsx product-card.tsx product-grid.tsx
+                                    # case-card.tsx case-carousel.tsx
                                     # step-list.tsx material-list.tsx faq-accordion.tsx
                                     # order-status-badge.tsx order-list.tsx price.tsx
-                                    # stat-block.tsx contact-block.tsx
+                                    # stat-block.tsx contact-block.tsx contact-channels.tsx
+                                    # service-chat.tsx
+  ai-elements/                      # conversation.tsx message.tsx prompt-input.tsx（AI Elements 源码，可改）
   auth/                             # auth-dialog.tsx auth-provider.tsx require-auth.tsx
   forms/                            # purchase-form.tsx profile-form.tsx password-form.tsx
+                                    # password-input.tsx
 lib/
   i18n/
     dictionaries/{zh,en}.json
@@ -89,11 +97,13 @@ lib/
   mock/
     products/{base,zh,en}.json
     guide/{base,zh,en}.json
+    cases/{base,zh,en}.json
   server/
     store.ts                        # 内存存储（Map 结构 + globalThis 单例 + 种子数据）
     auth.ts                         # 密码哈希、会话签发与校验、滑动续期
     products.ts                     # 合并 base + 语言文件，返回产品数据
     guide.ts
+    cases.ts
     orders.ts                       # 创建、查询、取消、模拟支付、重复下单校验
     api-response.ts                 # ok() / fail() 统一响应构造器
   types/
@@ -112,12 +122,17 @@ lib/
 
 ```bash
 npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs badge \
-  separator avatar form field input label select accordion table skeleton empty alert sonner spinner
+  separator avatar form field input input-group label select accordion table skeleton empty alert sonner spinner hover-card \
+  popover
+
+# 对话组件来自 AI Elements（Vercel 官方，基于 shadcn）。重装会对已存在文件逐个询问是否覆盖，
+# 本项目对 components/ui/button.tsx 做过定制（inverse / outline-inverse），覆盖时一律选否。
+npx ai-elements@latest add conversation message prompt-input
 ```
 
 | 组件 | 用在哪 |
 | --- | --- |
-| `button` | 全站操作 |
+| `button` | 全站操作；额外补了 `inverse` / `outline-inverse` 两个变体，供深底表面（首页首屏）使用 |
 | `card` | 产品卡片、订单卡片、概览信息块 |
 | `dialog` | 登录 / 注册弹窗 |
 | `sheet` | 移动端导航抽屉 |
@@ -126,8 +141,10 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 | `tabs` | 登录弹窗的登录/注册切换、订单状态筛选 |
 | `badge` | 产品标签（热销/新品/法定）、订单状态徽标 |
 | `separator` | 分区内的信息分隔 |
+| `hover-card` | 悬浮工具轨「联系方式」的提示框 |
+| `popover` | 悬浮工具轨「在线客服」的会话面板（`side="left"`，避开右侧轨道） |
 | `avatar` | Header 用户头像 |
-| `form` + `field` + `input` + `label` + `select` | 投保表单、账户表单 |
+| `form` + `field` + `input` + `input-group` + `label` + `select` | 投保表单、账户表单；密码框右侧的「小眼睛」用 `InputGroup` + `InputGroupAddon` 承载 |
 | `accordion` | 投保指引的常见问题 |
 | `table` | 我的订单（桌面端） |
 | `skeleton` | 列表与详情的加载态 |
@@ -155,6 +172,7 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 - **遮罩类组件不手写 `z-index`**，由 shadcn 自行管理堆叠。
 - **表单布局用 `FieldGroup` + `Field`**，不用 `div` 加 `space-y-*` 或 `grid gap-*` 拼。
 - **`InputGroup` 内必须用 `InputGroupInput` / `InputGroupTextarea`**，不塞裸 `Input` / `Textarea`。
+- **`InputGroup` 放进 `FormControl` 时要把 `data-slot` 转挂到分组上**：`FormControl` 会透传 `data-slot="form-control"` 盖掉输入框自己的 `input-group-control`，分组的聚焦描边 / 报错描边选择器随即失配，输入框会既没有焦点环也没有错误环。
 - **2–7 个选项的互斥选择用 `ToggleGroup`**，不循环 `Button` 手写激活态。
 - **一组复选/单选外层用 `FieldSet` + `FieldLegend`**。
 - **校验态用 `data-invalid` + `aria-invalid`**：`data-invalid` 加在 `Field` 上，`aria-invalid` 加在控件上；禁用态同理用 `data-disabled` + `disabled`。
@@ -207,10 +225,12 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 | Block | 说明 |
 | --- | --- |
 | `SectionHeading` | 分区抬头模版：眉标 + 大标题（可两段换色）+ 副标题。所有分区必须用它 |
-| `ProductCard` | 产品卡片：名称、卖点、价格、保额、服务内容摘要、标签、CTA |
+| `ProductCard` | 产品卡片：名称、卖点、价格、保额、服务内容摘要、标签、双 CTA（描边「查看详情」+ 实心「立即投保」） |
 | `ProductGrid` | 响应式网格（桌面 3 / 平板 2 / 移动 1），内含 loading / empty / error |
 | `Price` | 价格展示：货币格式化 + `tabular-nums` + 可选「/ 年」单位 |
 | `StepList` | 投保指引的流程步骤（序号 + 标题 + 说明 + 时长） |
+| `CaseCard` | 投保案例卡片：图标 + 「城市 · 车主」+ 车牌与投保产品 + 理赔摘要 + 车主原话 + 理赔天数 |
+| `CaseCarousel` | 投保案例横向轨道：匀速从右向左无缝循环（复制一份卡片接尾，`transform` 位移，越界即整体减掉一份），无播放控件；悬停 / 聚焦停住，`prefers-reduced-motion` 时不动；无数据时用 `Empty` |
 | `MaterialList` | 所需材料清单（材料名 + 说明 + 是否必需） |
 | `FaqAccordion` | 常见问题，基于 `accordion` |
 | `OrderStatusBadge` | 订单状态徽标，**颜色 + 文字**，四个状态一一映射 |
@@ -274,10 +294,10 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 
 ### 8.2 首页分区滚动导航
 
-- 首页四个分区 id 固定为 `home` / `products` / `guide` / `about`，顺序与 Header Tab 严格一致。
+- 首页五个分区 id 固定为 `home` / `products` / `guide` / `cases` / `about`，顺序与 Header Tab 严格一致。
 - **在首页点击 Tab**：`scrollIntoView({ behavior: 'smooth' })` 平滑滚动；**不改变 URL、不刷新页面**。
 - **在其他页面点击 Tab**：先把目标分区写入 `sessionStorage`（键 `swi:pending-section`），再 `router.push` 到 `/{locale}`；首页挂载后读取该值、滚动到分区、随后清除该键。
-- **滚动高亮**：用 `IntersectionObserver` 观察四个分区，取可见比例最大的分区高亮对应 Tab；不监听 `scroll` 事件逐帧计算。
+- **滚动高亮**：用 `IntersectionObserver` 观察五个分区，取可见比例最大的分区高亮对应 Tab；不监听 `scroll` 事件逐帧计算。
 - 每个分区加 `scroll-margin-top`，值等于吸顶 Header 高度，避免滚动后被 Header 遮住标题。
 - **不使用 hash 路由，也不把 `#section` 写进 URL**。
 - 滚动指示轨（`ScrollRail`）仅桌面端显示，复用同一套 `IntersectionObserver` 结果，激活点用 `--highlight`。
@@ -295,6 +315,7 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 - 跳转前写入语言 Cookie（`NEXT_LOCALE`，有效期 1 年）。
 - 路径其余部分保持不变；首页场景下把当前分区写入 `sessionStorage`，目标语言页面读取后复原位置。
 - 根路径 `/` 由 `middleware.ts` 按「Cookie → `Accept-Language` → 默认 `zh`」重定向。
+- **入口只在 Header**：Footer 不提供语言切换，避免同一页面出现两个语言入口。
 
 ### 8.5 登录注册弹窗导航
 
@@ -307,6 +328,22 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 
 - Header 在 `< 1024px` 收纳为 `Sheet` 抽屉，点击导航项后自动关闭。
 - 抽屉内的分区 Tab 行为与桌面一致（在首页滚动、在其他页先跳首页）。
+
+---
+
+### 8.7 悬浮工具轨
+
+- `FloatingTools` 只挂在首页（`app/[locale]/page.tsx`），其他页面不出现。
+- 断点 `hidden xl:block`：**≥ 1280px 才渲染**。1024–1279px 时内容区右缘会与 48px 宽的轨道重叠，宁可不显示。
+- 三个按钮纵向排列，固定在视口右侧、垂直居中，层级 `z-30`（低于 Header 的 `z-40`）。
+- 在线客服 → `Popover`（`side="left"`、`sideOffset={8}`），内容为 `ServiceChat`：头部（标题 + 服务时间）、对话区、输入行。对话区由 AI Elements 的 `Conversation` / `Message` / `PromptInput` 组成，消息状态与流式接收来自 `useChat`（`@ai-sdk/react`）。
+- 面板宽 320px（`w-[20rem]`），对话区固定高 269px（`h-[16.8rem]`），总高约 474px。矮视口由 Radix 的碰撞检测整体上移，不自己算位置。
+- 不用遮罩、不锁滚动、不改 URL。内部点击不关闭，`Esc` 关闭并把焦点还给触发按钮（Radix 默认行为，未覆写）。
+- **只发文本**：不渲染附件按钮，`onSubmit` 里直接忽略 `PromptInputMessage.files`。
+- 联系方式 → `HoverCard` + `side="left"`，提示框内为电话 / 邮箱 / 微信二维码。
+- 返回顶部 → `window.scrollTo({ top: 0, behavior: "smooth" })`；不写 `#top` 锚点、不改 URL。
+- 触发元素必须是真的 `button`（键盘可聚焦，名称来自 `sr-only` 文案），`HoverCard` / `Popover` 的 `Trigger` 均用 `asChild` 承载。
+- 联系方式内容全部复用 `ContactChannels`（`HoverCard` 与 Footer 共用），只有一份数据源；客服面板同理，只有 `ServiceChat` 一处。
 
 ---
 
@@ -329,9 +366,10 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 
 | 数据类型 | 获取方式 |
 | --- | --- |
-| 产品、投保指引（公开只读） | 服务端组件调用 `lib/server/products.ts`、`lib/server/guide.ts`；这两个函数同时是 `/api/products`、`/api/guide` 的数据来源 |
+| 产品、投保指引、投保案例（公开只读） | 服务端组件调用 `lib/server/products.ts`、`lib/server/guide.ts`、`lib/server/cases.ts`；这三个函数同时是 `/api/products`、`/api/guide`、`/api/cases` 的数据来源 |
 | 用户、订单（需鉴权、需变更） | 客户端组件 `fetch('/api/**')`；服务端组件读取时直接用 `lib/server/auth.ts` 校验会话 |
 | 表单提交、取消订单、模拟支付 | 客户端 `fetch` POST，成功后 `router.refresh()` 让服务端数据重新渲染 |
+| 客服对话（流式） | `useChat` 走 `POST /api/chat`，**不套统一信封**——AI SDK 的 UI 消息流协议要求响应体就是流本身；历史记录用 `GET /api/chat?sessionId=` 取，那个仍走信封 |
 
 **响应体契约**：所有接口统一返回 `{ success, code, message, data }`，权威定义见 `prd.md` §10.1。客户端只信 `success` 与 `code`，UI 文案由 `code` 查字典得到，**不渲染后端 `message`**（否则英文用户会看到中文）。收到 `code: "UNAUTHORIZED"` 时的统一处理：清除登录态 → 打开 `AuthDialog` → 成功后回到当前页面。
 
@@ -342,8 +380,9 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 ## 10. 通用布局模式
 
 - **`Container`**：统一处理最大宽度 1200px 与响应式左右内边距（20 / 32 / 40px）。页面与分区不得各自写 `max-w-*` 与 `px-*`。
-- **分区结构**：每个分区 = `Container` + `SectionHeading` + 内容 + 可选 CTA。抬头模版必须统一，四个分区看起来要像一套系统。
+- **分区结构**：每个分区 = `Container` + `SectionHeading` + 内容 + 可选 CTA。抬头模版必须统一，五个分区看起来要像一套系统。
 - **分区切换靠留白**，不用分割线或色块硬切（垂直内边距见 `design.md` §4.2）。
+- **无缝循环轨道**（投保案例）：全站唯一的自动播放位。结构是「`overflow-hidden` 视口 + `w-max` 行」；卡片渲染两份，用 `requestAnimationFrame` 按时间差匀速位移 `transform: translate3d()`（不是改 `scrollLeft`、不是逐卡跳），位移越过「一份的宽度」就整体减掉一份，因此永远衔接、不会回卷。用 `ResizeObserver` 重量一份宽度（语言 / 字号 / 窗口变化都会改宽度）。必须做到：① 不用 `snap-*`（会和连续位移打架）；② 悬停与聚焦时停住（`tabIndex=0` 让键盘用户也能停）；③ `prefers-reduced-motion: reduce` 时不动画；④ 单帧步长按时间差计算并设上限，避免标签页回到前台时跳一大段。横向溢出只能被视口裁剪，**不得传到页面级**（360px 无横向滚动条）。
 - **页面骨架**：
 
 ```
@@ -356,6 +395,7 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 
 首页在此之上额外挂 `ScrollRail`；`/account/*` 在 `[locale]/account/layout.tsx` 中再套一层 `AccountShell`（侧边栏 + 内容区）。
 
+- **首屏媒体层（首页 Hero）**：`overflow-hidden` 的 Hero 内部叠三层——`next/image` 的 poster（`fill` + `priority` + `sizes="100vw"`）→ `video`（`absolute inset-0 size-full object-cover`）→ 深蓝径向遮罩（`bg-radial`，中心最淡）；内容层 `relative z-10`。媒体层**绝对定位、不是 `fixed`**，滑出视口即随 Hero 一起消失。视频的挂载时机、暂停与降级规则见 `avoid.md` §5。
 - **响应式列表模式**：桌面用 `Table`、移动用卡片列表时，**数据源与状态共用一套**，只在渲染层分叉，不要写两份取数逻辑。
 
 ---
@@ -365,7 +405,7 @@ npx shadcn@latest add button card dialog sheet alert-dialog dropdown-menu tabs b
 - [ ] 页面里没有原始色值与手写样式常量，全部走令牌与 shadcn 组件。
 - [ ] `components/ui/` 下没有业务文案、没有请求、没有 `lib/server` 引用。
 - [ ] Block 不发请求，四种状态（loading / empty / error / ready）齐全。
-- [ ] `'use client'` 没有出现在任何 `page.tsx` 或 Section 上。
+- [ ] `'use client'` 没有出现在任何 `page.tsx` 或 `*-section.tsx` 上（首屏视频层 `hero-media.tsx` 是 Section 内部唯一带交互状态的叶子，允许）。
 - [ ] 列表 `key` 均为业务 id，无数组下标。
 - [ ] 全站导航用 `next/link`，无 `<a href>` 硬跳转。
 - [ ] 首页 Tab 在首页内滚动、在外页跳首页并复原分区；URL 中不出现 `#section`。

@@ -86,6 +86,45 @@ export type Guide = {
   faqs: GuideFaq[];
 };
 
+/* ---------- 投保案例 ---------- */
+
+/** 案例卡片的配图键；语言无关，具体图标映射见 components/blocks/case-card.tsx */
+export const CASE_ICONS = [
+  "car",
+  "rain",
+  "wind",
+  "bike",
+  "wrench",
+  "health",
+  "sparkles",
+  "key",
+] as const;
+
+export type CaseIcon = (typeof CASE_ICONS)[number];
+
+/**
+ * 合并 base.json 与语言文件后的投保案例。
+ * 语言无关字段（关联产品、图标、理赔天数、车牌号）只在 base.json 定义一份。
+ */
+export type InsuranceCase = {
+  id: string;
+  sortOrder: number;
+  productId: string;
+  icon: CaseIcon;
+  /** 理赔到账所需天数 */
+  claimDays: number;
+  plateNo: string;
+  /* 以下字段来自语言文件 */
+  city: string;
+  ownerName: string;
+  summary: string;
+  /** 车主原话，含该语言的引号 */
+  quote: string;
+};
+
+/** 案例 + 已按当前语言取到的产品名，直接给 UI 使用 */
+export type CaseView = InsuranceCase & { productName: string };
+
 /* ---------- 账户 ---------- */
 
 export type User = {

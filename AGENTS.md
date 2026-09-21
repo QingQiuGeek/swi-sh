@@ -28,6 +28,7 @@ https://www.exhibitionguard.com
 http://shdichan.swiglobal.com/
 shadcn官网：https://ui.shadcn.com/docs/components
 nextjs官网：https://nextjs.org/docs
+ai-sdk官网：https://ai-sdk.dev/docs/introduction
 
 ## 可用 前端 skills
 - baseline-ui：UI 打磨收尾，修间距/层级/字体/小布局问题

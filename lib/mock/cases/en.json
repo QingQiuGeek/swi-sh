@@ -1,0 +1,62 @@
+{
+  "case-01": {
+    "city": "Hangzhou",
+    "ownerName": "Mr. Wang",
+    "summary": "Rear-ended on the elevated road; the payout was credited right after the assessment.",
+    "quote": "“All done on my phone — I never visited a counter.”"
+  },
+  "case-02": {
+    "city": "Chengdu",
+    "ownerName": "Ms. Li",
+    "summary": "Stalled in flood water; the assessor came the same day, and the repairs and the claim were handled together.",
+    "quote": "“I expected trouble with a flooded car, but the steps were clear.”"
+  },
+  "case-03": {
+    "city": "Suzhou",
+    "ownerName": "Mr. Zhang",
+    "summary": "A stone thrown up by the car ahead cracked the windscreen; own-damage cover paid for a factory glass replacement.",
+    "quote": "“The new glass was original and I paid nothing upfront.”"
+  },
+  "case-04": {
+    "city": "Shenzhen",
+    "ownerName": "Ms. Chen",
+    "summary": "Scraped a parked car while reversing; compulsory cover paid the property damage within its limit.",
+    "quote": "“Even a small claim was settled without hassle.”"
+  },
+  "case-05": {
+    "city": "Wuhan",
+    "ownerName": "Mr. Liu",
+    "summary": "A breakdown left the car undrivable; the Basic plan's free tow and the repair bill were settled online.",
+    "quote": "“The tow truck arrived 40 minutes after I called.”"
+  },
+  "case-06": {
+    "city": "Xi'an",
+    "ownerName": "Ms. Zhao",
+    "summary": "Someone scraped the car in our car park and drove off; own-damage cover paid out as agreed.",
+    "quote": "“Paying out even when the other driver is gone is what mattered to me.”"
+  },
+  "case-07": {
+    "city": "Guangzhou",
+    "ownerName": "Mr. Zhou",
+    "summary": "A passenger was hurt in a collision; passenger liability cover reimbursed the full medical bill.",
+    "quote": "“Not having to pay the hospital first made a real difference.”"
+  },
+  "case-08": {
+    "city": "Nanjing",
+    "ownerName": "Ms. Sun",
+    "summary": "The car was stolen and never recovered; theft cover paid out at the vehicle's actual value.",
+    "quote": "“The payout followed the policy wording, with no back and forth.”"
+  },
+  "case-09": {
+    "city": "Qingdao",
+    "ownerName": "Mr. Wu",
+    "summary": "Falling debris in a typhoon dented the door; the panel work and the claim were finished together.",
+    "quote": "“I didn't have to pay the garage out of my own pocket.”"
+  },
+  "case-10": {
+    "city": "Tianjin",
+    "ownerName": "Ms. Zheng",
+    "summary": "A scooter hit the car from the side; liability cover paid the rider's medical costs and lost wages.",
+    "quote": "“Both sides were handled at once, no running around.”"
+  }
+}

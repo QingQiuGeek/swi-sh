@@ -33,9 +33,11 @@ export function ScrollRail() {
                 : "bg-border group-hover:bg-muted-foreground",
             )}
           />
+          {/* 底衬：首页首屏是深底视频，指示轨的原生文字色在深底上不可读；
+              底衬取页面底色，在浅色分区上完全不可见，只在深底首屏显形 */}
           <span
             className={cn(
-              "text-xs transition-colors duration-150",
+              "rounded-full bg-background/90 px-2 py-0.5 text-xs transition-colors duration-150",
               active === id ? "text-foreground" : "text-muted-foreground",
             )}
           >

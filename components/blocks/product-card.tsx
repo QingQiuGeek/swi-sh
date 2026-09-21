@@ -4,6 +4,7 @@ import Link from "next/link";
 import { cn } from "cn";
 import { CarIcon, CheckIcon, ShieldCheckIcon, ShieldIcon } from "lucide-react";
 
+import { BuyNowButton } from "@/components/blocks/buy-now-button";
 import { Price } from "@/components/blocks/price";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ const CATEGORY_ICONS: Record<ProductCategory, typeof CarIcon> = {
   single: ShieldIcon,
 };
 
-/** 产品卡片：名称、卖点、价格、保额、服务内容前两条、标签与详情入口 */
+/** 产品卡片：名称、卖点、价格、保额、服务内容前两条、标签与「查看详情 + 立即投保」双入口 */
 export function ProductCard({
   product,
   className,
@@ -105,12 +106,13 @@ export function ProductCard({
         </ul>
       </CardContent>
 
-      <CardFooter className="justify-end">
+      <CardFooter className="flex-wrap justify-end gap-2">
         <Button asChild variant="outline">
           <Link href={`/${locale}/products/${product.slug}`}>
             {t.common.viewDetail}
           </Link>
         </Button>
+        <BuyNowButton slug={product.slug} size="default" />
       </CardFooter>
     </Card>
   );

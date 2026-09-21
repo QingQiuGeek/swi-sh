@@ -1,6 +1,6 @@
 /** 首页分区与「跨页滚动」的共享逻辑。分区 id 顺序必须与 Header Tab 顺序严格一致。 */
 
-export const SECTION_IDS = ["home", "products", "guide", "about"] as const;
+export const SECTION_IDS = ["home", "products", "guide", "cases", "about"] as const;
 
 export type SectionId = (typeof SECTION_IDS)[number];
 

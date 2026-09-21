@@ -69,7 +69,7 @@ export function Header() {
               }}
               aria-current={activeSection === id ? "true" : undefined}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-medium transition-colors duration-150 hover:bg-accent hover:text-accent-foreground",
+                "rounded-md px-2.5 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-150 hover:bg-accent hover:text-accent-foreground",
                 activeSection === id ? "text-primary" : "text-muted-foreground",
               )}
             >

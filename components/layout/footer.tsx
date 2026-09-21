@@ -1,9 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/layout/container";
-import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { getDictionary } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n/config";
+
+/** 二维码原图压缩后为 640×539，按同一比例传宽高，避免布局抖动 */
+const QR_WIDTH = 112;
+const QR_HEIGHT = Math.round(QR_WIDTH * (539 / 640));
 
 /** 页脚：深蓝底反白，四栏 + 底部条（备案号 / 版权 / 演示数据声明） */
 export function Footer({ locale }: { locale: Locale }) {
@@ -18,8 +22,16 @@ export function Footer({ locale }: { locale: Locale }) {
 
   const contacts = [
     { label: t.about.contactAddress, value: t.footer.address },
-    { label: t.about.contactPhone, value: t.footer.phone },
-    { label: t.about.contactEmail, value: t.footer.email },
+    {
+      label: t.about.contactPhone,
+      value: t.footer.phone,
+      href: `tel:${t.footer.phone}`,
+    },
+    {
+      label: t.about.contactEmail,
+      value: t.footer.email,
+      href: `mailto:${t.footer.email}`,
+    },
   ];
 
   return (
@@ -60,7 +72,16 @@ export function Footer({ locale }: { locale: Locale }) {
                     {contact.label}
                   </dt>
                   <dd className="text-sm text-primary-foreground/80">
-                    {contact.value}
+                    {contact.href ? (
+                      <a
+                        href={contact.href}
+                        className="tabular-nums underline-offset-4 transition-colors duration-150 hover:text-primary-foreground hover:underline"
+                      >
+                        {contact.value}
+                      </a>
+                    ) : (
+                      contact.value
+                    )}
                   </dd>
                 </div>
               ))}
@@ -68,8 +89,17 @@ export function Footer({ locale }: { locale: Locale }) {
           </div>
 
           <div className="flex flex-col gap-3">
-            <p className="text-sm font-semibold">{t.footer.languageTitle}</p>
-            <LanguageSwitcher variant="links" />
+            <p className="text-sm font-semibold">{t.tools.wechat}</p>
+            <Image
+              src="/wx.jpg"
+              alt={t.tools.wechatHint}
+              width={QR_WIDTH}
+              height={QR_HEIGHT}
+              className="rounded-md border border-primary-foreground/20"
+            />
+            <p className="text-xs leading-relaxed text-primary-foreground/60">
+              {t.tools.wechatHint}
+            </p>
           </div>
         </div>
 

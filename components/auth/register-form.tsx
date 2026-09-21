@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { PasswordInput } from "@/components/forms/password-input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -117,8 +118,7 @@ export function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
             <FormItem>
               <FormLabel>{t.auth.password}</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
+                <PasswordInput
                   autoComplete="new-password"
                   placeholder={t.auth.passwordPlaceholder}
                   {...field}

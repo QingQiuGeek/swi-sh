@@ -17,7 +17,7 @@ export function SectionCta({
 }: {
   sectionId: SectionId;
   label: string;
-  variant?: "default" | "outline";
+  variant?: "default" | "outline" | "inverse" | "outline-inverse";
   size?: "lg" | "default";
   className?: string;
 }) {

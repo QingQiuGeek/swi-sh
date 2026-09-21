@@ -7,14 +7,17 @@ import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 
 /**
- * 产品详情页的「立即投保」。
+ * 「立即投保」：产品卡片与产品详情页共用。
  * 未登录时先弹登录框，登录成功后原地进入投保表单，不丢失用户意图。
  */
 export function BuyNowButton({
   slug,
+  size = "lg",
   className,
 }: {
   slug: string;
+  /** 详情页用 lg；卡片内与「查看详情」等高用 default */
+  size?: "default" | "lg";
   className?: string;
 }) {
   const { locale, t } = useI18n();
@@ -38,11 +41,11 @@ export function BuyNowButton({
   return (
     <Button
       type="button"
-      size="lg"
+      size={size}
       className={className}
       onClick={handleClick}
     >
-      {t.products.detail.buyNow}
+      {t.common.buyNow}
     </Button>
   );
 }

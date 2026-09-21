@@ -8,6 +8,7 @@
     "errorDesc": "请稍后重试，或返回首页继续浏览。",
     "backHome": "返回首页",
     "viewDetail": "查看详情",
+    "buyNow": "立即投保",
     "browseProducts": "浏览保险产品",
     "viewAllProducts": "查看全部产品",
     "yearSuffix": "/ 年",
@@ -22,6 +23,7 @@
     "home": "首页",
     "products": "保险产品",
     "guide": "投保指引",
+    "cases": "投保案例",
     "about": "关于我们"
   },
   "header": {
@@ -39,7 +41,6 @@
     "tagline": "专注车险产品展示与在线投保的中英双语演示站点。",
     "navTitle": "站点导航",
     "contactTitle": "联系方式",
-    "languageTitle": "语言",
     "address": "上海市浦东新区世纪大道 1000 号 12 层",
     "phone": "400-000-0000",
     "email": "support@example.com",
@@ -47,7 +48,19 @@
     "copyright": "© 2026 汽车保险（演示站点）",
     "demoNotice": "演示数据：公司名称、地址、电话与备案号均为占位内容。"
   },
-  "home": {
+  "tools": {
+    "service": "在线客服",
+    "contact": "联系方式",
+    "backToTop": "返回顶部",
+    "wechat": "微信客服",
+    "wechatHint": "用微信扫码添加客服",
+    "chatGreeting": "您好，我是汽车保险的智能助手。产品、价格、投保流程都可以问我。",
+    "chatPlaceholder": "输入你的问题…",
+    "chatSend": "发送",
+    "chatStop": "停止生成",
+    "chatError": "客服助手暂时不可用，请稍后再试，或通过下方方式联系人工客服。",
+    "chatLoading": "正在载入会话…"
+  },  "home": {
     "hero": {
       "eyebrow": "CAR INSURANCE",
       "titleLine1": "看得懂的车险",
@@ -68,6 +81,11 @@
       "title": "投保指引",
       "subtitle": "四步完成投保，所需材料与常见问题一次说清。",
       "cta": "查看完整投保指引"
+    },
+    "cases": {
+      "eyebrow": "CUSTOMER STORIES",
+      "title": "投保案例",
+      "subtitle": "车主的投保与理赔记录：事故场景、处理方式与到账时间都写在卡片上。"
     },
     "about": {
       "eyebrow": "ABOUT US",
@@ -98,7 +116,6 @@
     "error": "产品数据加载失败",
     "detail": {
       "backToList": "返回产品列表",
-      "buyNow": "立即投保",
       "coveragesTitle": "服务内容明细",
       "noticeTitle": "投保须知",
       "vehiclesLabel": "适用车型",
@@ -114,6 +131,14 @@
     "materialsTitle": "所需材料",
     "faqsTitle": "常见问题",
     "cta": "浏览保险产品"
+  },
+  "cases": {
+    "trackLabel": "投保案例列表",
+
+    "claimDays": "{days} 天理赔到账",
+
+    "empty": "暂无投保案例",
+    "emptyDesc": "案例正在整理中，请稍后再来。"
   },
   "about": {
     "title": "关于我们",
@@ -203,6 +228,8 @@
     "emailPlaceholder": "you@example.com",
     "password": "密码",
     "passwordPlaceholder": "至少 8 位，含字母与数字",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码",
     "loginSubmit": "登录",
     "registerSubmit": "注册",
     "loginSuccess": "登录成功",

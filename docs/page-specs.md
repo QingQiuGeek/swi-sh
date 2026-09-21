@@ -1,4 +1,4 @@
-P2-展示 OK P1-验收 OK P5-验收 OK P4-两次一致 OK P3-强度 OK P2-提交流程 OK P1-校验规则 OK # 汽车保险网站 页面规格
+# 汽车保险网站 页面规格
 
 > 版本：v0.1
 > 上游：`prd.md` v0.5（路由与业务规则）、`visual.md` v0.1、`design.md` v0.1、`ui-patterns.md` v0.1
@@ -17,7 +17,7 @@ P2-展示 OK P1-验收 OK P5-验收 OK P4-两次一致 OK P3-强度 OK P2-提交
 | --- | --- | --- |
 | 高度 | 72px | 60px |
 | 左侧 | `public/next.svg` + 文字「汽车保险」 | 同左 |
-| 中间 | 导航 4 项：首页 / 保险产品 / 投保指引 / 关于我们 | 收起进抽屉 |
+| 中间 | 导航 5 项：首页 / 保险产品 / 投保指引 / 投保案例 / 关于我们 | 收起进抽屉 |
 | 右侧 | 语言切换（中 / EN）+ 登录注册按钮；已登录时显示头像 + 用户名下拉菜单 | 语言切换 + 汉堡按钮 |
 | 定位 | `sticky top-0 z-40`，底色 `bg-background/95` + 顶部细描边 | 同左 |
 
@@ -29,20 +29,26 @@ P2-展示 OK P1-验收 OK P5-验收 OK P4-两次一致 OK P3-强度 OK P2-提交
 ### 1.2 Footer
 
 - 底色 `--primary`，文字 `--primary-foreground`，上内边距 64px / 下 32px。
-- 四栏：品牌简介 / 导航链接 / 联系方式（地址、电话、邮箱，全部 mock）/ 语言切换。
+- 四栏：品牌简介 / 导航链接 / 联系方式（地址、电话、邮箱，全部 mock）/ 微信客服（微信二维码 + 提示文案）。
+- 联系方式里的电话与邮箱是可点击链接（`tel:` / `mailto:`），号码用 `tabular-nums` 对齐。
+- **页脚不含语言切换**：语言入口只在 Header，避免同一屏出现两个语言控件。
+- 二维码用 `next/image`，桌面 112px 宽；素材 `public/wx.jpg`（640×539）。
 - 底部条：备案号（mock）+ 版权 + **「本站为演示数据」声明**。
 
 ### 1.3 全局弹窗与提示
 
 - `AuthDialog`：登录 / 注册双 Tab 弹窗，全局挂载，通过 `openAuthDialog({ intent, onSuccess })` 唤起，**不改变 URL**。
+- `AuthDialog` 的密码框右侧带「小眼睛」按钮（`PasswordInput`），可切换明文 / 密文；登录与注册两个表单共用同一个组件。
 - `Toaster`：`sonner`，位置右下。
 - `ScrollRail`：仅首页、仅桌面显示，左侧竖向滚动指示轨。
+- `FloatingTools`：仅首页、仅 `xl`（≥ 1280px）显示，视口右侧垂直居中。在线客服 → `Popover`（`side="left"`，面板为 `ServiceChat` 会话外壳，宽 320px / 会话区高 269px）；联系方式 → `HoverCard`（`side="left"`，电话 / 邮箱 / 微信二维码）；返回顶部 → 平滑滚回顶部。
+- 联系方式复用 `ContactChannels`（`components/blocks/contact-channels.tsx`），客服面板见 `components/blocks/service-chat.tsx`。
 
 ### 1.4 数据获取方式
 
 | 页面类型 | 方式 |
 | --- | --- |
-| 公开只读（首页、产品、指引、关于） | 服务端组件调用 `lib/server/products.ts` / `lib/server/guide.ts` |
+| 公开只读（首页、产品、指引、案例、关于） | 服务端组件调用 `lib/server/products.ts` / `lib/server/guide.ts` / `lib/server/cases.ts` |
 | 需鉴权（投保、个人中心） | 服务端组件读会话；变更操作由客户端组件 `fetch('/api/**')` |
 
 响应体契约见 `prd.md` §10.1。
@@ -54,13 +60,16 @@ P2-展示 OK P1-验收 OK P5-验收 OK P4-两次一致 OK P3-强度 OK P2-提交
 ```
 /[locale]  首页
   ├─ Tab「保险产品」→ 滚动到本页 products 分区
-  │     └─ 产品卡片 → /[locale]/products/[slug]
+  │     ├─ 产品卡片「查看详情」→ /[locale]/products/[slug]
+  │     └─ 产品卡片「立即投保」→ 未登录先弹登录框，成功后 /[locale]/purchase/[slug]
   ├─ Tab「投保指引」→ 滚动到本页 guide 分区
+  ├─ Tab「投保案例」→ 滚动到本页 cases 分区
   ├─ Tab「关于我们」→ 滚动到本页 about 分区
   └─ 「查看全部产品」→ /[locale]/products
 
 /[locale]/products  产品列表
-  └─ 产品卡片 → /[locale]/products/[slug]
+  ├─ 产品卡片「查看详情」→ /[locale]/products/[slug]
+  └─ 产品卡片「立即投保」→ /[locale]/purchase/[slug]
 
 /[locale]/products/[slug]  产品详情
   └─ 「立即投保」
@@ -85,6 +94,7 @@ P2-展示 OK P1-验收 OK P5-验收 OK P4-两次一致 OK P3-强度 OK P2-提交
 
 - 语言切换：替换路径首段，路径其余部分不变（`ui-patterns.md` §8.4）。
 - 未登录访问 `/purchase/*` 与 `/account/*`：不重定向，渲染 `RequireAuth` 占位并弹出登录框。
+- 「投保案例」只有首页分区，不设独立路由页面；Tab、滚动指示轨与移动端抽屉三处入口共用 `SECTION_IDS`。
 
 ---
 
@@ -94,19 +104,20 @@ P2-展示 OK P1-验收 OK P5-验收 OK P4-两次一致 OK P3-强度 OK P2-提交
 | --- | --- |
 | 渲染 | 服务端组件 |
 | 需登录 | 否 |
-| 数据 | `getProducts(locale)`（取前 3 或全部 6 张卡片）、`getGuide(locale)` |
-| 主要 Blocks | `SectionHeading`、`ProductCard`、`ProductGrid`、`StepList`、`Price`、`StatBlock`、`ContactBlock`、`ScrollRail` |
+| 数据 | `getProducts(locale)`（取前 3 或全部 6 张卡片）、`getGuide(locale)`、`getCases(locale)` |
+| 主要 Blocks | `HeroMedia`、`SectionHeading`、`ProductCard`、`ProductGrid`、`StepList`、`CaseCard`、`CaseCarousel`、`Price`、`StatBlock`、`ContactBlock`、`ScrollRail` |
 | 核心操作 | 分区 Tab 滚动、跳转产品详情、跳转完整指引 / 关于页 |
 
 ### 3.1 页面结构
 
 ```
-Hero（分区 id=home）
-├─ 眉标（eyebrow，大写 + 字距）
-├─ 主标题（两行；第二行用 --primary 做同色相深浅对比）
-├─ 副标题（body-lg）
-├─ 价格行：「年保费 低至 ¥950 起」——取产品列表最低价，用 Price 组件
-└─ 双 CTA：实心「浏览保险产品」（滚动到 products）+ 描边「查看投保指引」（滚动到 guide）
+Hero（分区 id=home，深底）
+├─ 媒体层：poster（next/image，priority）→ hall.mp4 → 深蓝径向遮罩（中心最淡、四角最深）；绝对定位铺满 Hero
+├─ 眉标（eyebrow，大写 + 字距，primary-foreground/70）
+├─ 主标题（两行；第一行 primary-foreground/75、第二行纯白，用同一白色系的明度差代替浅底的换色）
+├─ 副标题（body-lg，primary-foreground/80）
+├─ 价格行：「年保费 低至 ¥950 起」——取产品列表最低价，用 Price 组件（白色 Card 浮在深底上）
+└─ 双 CTA：实心白「浏览保险产品」（滚动到 products，variant=inverse）+ 白描边「查看投保指引」（滚动到 guide，variant=outline-inverse）
 
 Products 分区（id=products）
 ├─ SectionHeading：眉标 + 「保险产品」+ 副标题
@@ -118,6 +129,10 @@ Guide 分区（id=guide）
 ├─ StepList（4 步流程）
 └─ 文字链接「查看完整投保指引」→ /[locale]/guide
 
+Cases 分区（id=cases）
+├─ SectionHeading
+└─ CaseCarousel（案例卡横向轨道：匀速从右向左无缝循环，无播放控件）
+
 About 分区（id=about）
 ├─ SectionHeading
 ├─ 公司介绍摘要（两到三句）
@@ -125,7 +140,9 @@ About 分区（id=about）
 └─ 文字链接「了解我们」→ /[locale]/about
 ```
 
-- 四个分区垂直顺序与 Header Tab 顺序严格一致。
+- 五个分区垂直顺序与 Header Tab 顺序严格一致。
+- Hero 只负责首屏：高度 = 视口高 − Header 高，媒体层在 Hero 内部绝对定位（不是 fixed），滚出视口即随 Hero 消失。
+- 首屏是深底，Hero 之外的分区仍为冷白底（`visual.md` §4）。
 - 每个分区加 `scroll-margin-top`，值为 Header 高度。
 - 分区之间靠留白切分，不用分割线。
 
@@ -134,22 +151,38 @@ About 分区（id=about）
 | 状态 | 表现 |
 | --- | --- |
 | loading | 分区内容用 `Skeleton` 骨架，形状与最终布局一致 |
-| empty | 产品为 0 时，Products 分区显示 `Empty` + 「暂无在售产品」 |
+| empty | 产品为 0 时，Products 分区显示 `Empty` + 「暂无在售产品」；案例为 0 时，Cases 分区显示 `Empty` + 「暂无投保案例」 |
+| paused | 鼠标悬停或键盘聚焦时轨道停住；轨道滚出视口时不推进 |
 | error | 数据读取失败抛给 `error.tsx`，页面级 `Alert` + 重试 |
 | ready | 正常渲染 |
+| video-pending | 首屏先出 poster；`hall.mp4` 等窗口 `load` 之后才挂载（`preload="none"`），播放开始（`onPlaying`）后 600ms 淡入 |
+| video-paused | Hero 滚出视口后视频暂停解码，滚回首屏继续 |
+| reduced-motion | `prefers-reduced-motion: reduce` 时不挂载 video，只保留 poster |
 
 ### 3.3 响应式
 
 - 移动端：隐藏 `ScrollRail`；Hero 标题降为 `display` 移动字号；CTA 纵向堆叠且宽度撑满。
+- 案例轨道：移动端卡片宽为容器宽的 80%（上限 320px），横向溢出由轨道自身裁剪，页面级不得出现横向滚动条；无缝循环在移动端同样生效（`prefers-reduced-motion` 除外）。
+- 首屏视频：移动与桌面都播放（`object-cover`，竖屏会裁掉两侧）；poster 与遮罩移动端一致。
 - 平板：产品 2 列，其余同桌面。
 - 桌面：产品 3 列，显示滚动指示轨。
 
 ### 3.4 验收点
 
-- [ ] 点击四个 Tab 分别平滑滚动到对应分区，URL 不变、页面不刷新。
+- [ ] 点击五个 Tab 分别平滑滚动到对应分区，URL 不变、页面不刷新。
 - [ ] 手动滚动时 Tab 高亮跟随，且不监听 `scroll` 事件逐帧计算。
 - [ ] 从产品详情页点「保险产品」Tab，跳回首页后停在 products 分区。
 - [ ] Hero 价格行的数字等于产品列表中最低的年保费。
+- [ ] 首屏铺满 `hall.mp4`，静音循环自动播放、无播放控件；`hall-poster.jpg` 先于视频出现，视频播起来后淡入（不闪黑帧）。
+- [ ] `hall.mp4` 不参与 LCP：`prefers-reduced-motion: reduce` 下该请求根本不发出，只加载 poster。
+- [ ] 滑到 products 及以下分区后视频暂停并从视口消失；滚回首屏恢复播放。
+- [ ] 首屏眉标 / 标题 / 副标题 / CTA 压在视频最亮处对比度 ≥ 4.5:1（实测 5.6:1）。
+- [ ] 左侧滚动指示轨的文字在深底首屏上可读。
+- [ ] 案例分区的数据与 `/api/cases` 返回值一致（同一份 `getCases(locale)`）；切换语言后案例文案全部切换，无另一种语言残留。
+- [ ] 案例轨道匀速从右向左连续移动（约 80px/秒），位移到一份卡片宽度时无缝衔接，**不出现停顿、不回卷到开头**。
+- [ ] 鼠标悬停到轨道上时停住，移开 1 秒后从原位继续（不跳）；`prefers-reduced-motion: reduce` 下轨道保持静止。
+- [ ] 轨道内没有任何播放 / 上一张 / 下一张按钮。
+- [ ] 案例卡片上的产品名与产品数据中的名称一致（由 `productId` 关联，不单独翻译）。
 - [ ] 页面上出现「演示数据」声明。
 
 ---
@@ -175,7 +208,7 @@ ProductGrid（6 张卡片，按 sortOrder 升序）
 演示数据声明（Alert 或页脚文案）
 ```
 
-- 卡片内容：保险名、一句话卖点、`Price`（年保费，含「/ 年」）、保额、服务内容前 2 条、类别标签、`Badge`（热销 / 新品 / 法定）、「查看详情」链接。
+- 卡片内容：保险名、一句话卖点、`Price`（年保费，含「/ 年」）、保额、服务内容前 2 条、类别标签、`Badge`（热销 / 新品 / 法定）、「查看详情」描边按钮 + 「立即投保」实心按钮（未登录时先弹登录框，登录后进入投保表单）。
 - **不做类别分组标题**：本站 6 款产品按类别分组的组内数量为 1 / 3 / 2，分组反而割裂视觉；类别以卡片标签形式呈现。
 - **不做筛选与分页**：产品仅 6 款，加了也无人用。
 
@@ -633,7 +666,7 @@ Card
 | --- | --- |
 | 渲染 | 服务端组件读会话；表单为客户端组件 |
 | 数据 | 写：`POST /api/auth/password` |
-| 主要 Blocks | `PasswordForm`、`Card`、`FieldGroup`、`Field`、`Input` |
+| 主要 Blocks | `PasswordForm`、`Card`、`FieldGroup`、`Field`、`PasswordInput` |
 | 核心操作 | 修改密码 |
 
 ### 14.1 页面结构
@@ -654,6 +687,7 @@ Card
 - 当前密码不正确返回 400 `INVALID_PASSWORD`。
 - 新密码与当前密码相同返回 400 `SAME_PASSWORD`。
 - 修改成功后**作废该用户的其它会话，当前会话保留**并提示成功（`prd.md` §8.3）。
+- 三个密码框均用 `PasswordInput`（`components/forms/password-input.tsx`）：右侧「小眼睛」切换明文 / 密文，带 `aria-pressed` 与 `sr-only` 文案；与登录 / 注册弹窗、修改资料共用同一组件。
 - 表单提交成功后清空三个字段。
 
 ### 14.3 验收点
@@ -706,3 +740,6 @@ Empty
 - [ ] 所有表单的错误提示贴在对应字段，而非统一弹窗。
 - [ ] 所有金额按语言格式化并启用 `tabular-nums`。
 - [ ] 全站出现「演示数据」声明的位置至少包含：首页、关于我们、页脚。
+- [ ] 页脚没有语言切换控件，语言入口只在 Header。
+- [ ] 悬浮工具轨只在首页且 ≥ 1280px 显示；联系方式提示框内容与页脚一致；返回顶部平滑滚动、不改 URL。
+- [ ] 密码框（登录 / 注册 / 修改资料 / 修改密码）右侧「小眼睛」可切换明文 / 密文，切换不丢失已输入内容。

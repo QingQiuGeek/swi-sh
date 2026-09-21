@@ -1,0 +1,12 @@
+[
+  { "id": "case-01", "sortOrder": 1, "productId": "prd-commercial-comfort", "icon": "car", "claimDays": 2, "plateNo": "浙A***86" },
+  { "id": "case-02", "sortOrder": 2, "productId": "prd-own-damage", "icon": "rain", "claimDays": 3, "plateNo": "川A***21" },
+  { "id": "case-03", "sortOrder": 3, "productId": "prd-own-damage", "icon": "sparkles", "claimDays": 2, "plateNo": "苏E***07" },
+  { "id": "case-04", "sortOrder": 4, "productId": "prd-compulsory-traffic", "icon": "car", "claimDays": 3, "plateNo": "粤B***33" },
+  { "id": "case-05", "sortOrder": 5, "productId": "prd-commercial-basic", "icon": "wrench", "claimDays": 3, "plateNo": "鄂A***15" },
+  { "id": "case-06", "sortOrder": 6, "productId": "prd-commercial-comfort", "icon": "car", "claimDays": 5, "plateNo": "陕A***62" },
+  { "id": "case-07", "sortOrder": 7, "productId": "prd-commercial-basic", "icon": "health", "claimDays": 2, "plateNo": "粤A***48" },
+  { "id": "case-08", "sortOrder": 8, "productId": "prd-commercial-premium", "icon": "key", "claimDays": 5, "plateNo": "苏A***90" },
+  { "id": "case-09", "sortOrder": 9, "productId": "prd-own-damage", "icon": "wind", "claimDays": 3, "plateNo": "鲁B***27" },
+  { "id": "case-10", "sortOrder": 10, "productId": "prd-third-party-liability", "icon": "bike", "claimDays": 4, "plateNo": "津A***53" }
+]

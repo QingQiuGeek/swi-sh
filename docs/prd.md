@@ -1,4 +1,4 @@
-E-去掉自增序列 OK D-Order 模型 OK C-订单号规则 OK B-变更 OK A-版本 OK E-变更记录 OK D-字段级校验说明 OK C-业务码表 OK B-删 errors 行 OK A-删 FieldError OK D-业务码表 OK C-响应体 OK B-变更 OK A-版本 OK H-存储约束 OK G-C10 标注 OK # 汽车保险网站 PRD
+# 汽车保险网站 PRD
 
 > 版本：v0.6（已对齐）
 > 定位：需求基线。下游 `visual.md`（长什么样）、`design.md`（设计规范）、`ui-patterns.md`（UI 怎么搭）、`page-specs.md`（每页怎么搭）均以本文为准。
@@ -72,7 +72,7 @@ E-去掉自增序列 OK D-Order 模型 OK C-订单号规则 OK B-变更 OK A-版
 
 | 编号 | 功能 | 说明 |
 | --- | --- | --- |
-| F1 | 分区滚动首页 | 首页由「首页/保险产品/投保指引/关于我们」四个纵向分区组成，点击 Header Tab 平滑滚动定位，滚动时 Tab 高亮跟随 |
+| F1 | 分区滚动首页 | 首页由「首页/保险产品/投保指引/投保案例/关于我们」五个纵向分区组成，点击 Header Tab 平滑滚动定位，滚动时 Tab 高亮跟随；首屏为深底视频 Hero |
 | F2 | 保险产品 | 产品列表 + 产品详情；数据来自后端 mock JSON，经接口提供，含保险名、价格、服务内容 |
 | F3 | 投保指引 | 投保流程步骤、所需材料清单、常见问题 |
 | F4 | 关于我们 | 公司介绍、核心数据、联系方式 |
@@ -140,7 +140,7 @@ Header 右侧用户名 /「个人中心」
 | Route | 页面 | 需登录 | 主要内容 |
 | --- | --- | --- | --- |
 | `/` → `/[locale]` | 重定向入口 | 否 | 按 Cookie → `Accept-Language` → 默认 `zh` 重定向 |
-| `/zh`、`/en` | 首页（四分区） | 否 | Hero、保险产品、投保指引、关于我们 |
+| `/zh`、`/en` | 首页（五分区） | 否 | Hero、保险产品、投保指引、投保案例、关于我们 |
 | `/[locale]/products` | 产品列表 | 否 | 产品卡片网格、价格、服务内容摘要 |
 | `/[locale]/products/[slug]` | 产品详情 | 否 | 保险名、价格、保额、服务内容明细、立即投保 |
 | `/[locale]/purchase/[slug]` | 投保表单 | 是 | 被保人信息、车辆信息、费用确认、提交投保 |
@@ -157,8 +157,9 @@ Header 右侧用户名 /「个人中心」
 
 **全局组件**
 
-- **Header**（吸顶）：左侧「汽车保险」+ Logo（`public/next.svg`）；中间导航 Tab：首页 / 保险产品 / 投保指引 / 关于我们；右侧语言切换（中/EN）+ 登录注册按钮（已登录时显示用户名与个人中心入口）。
-- **Footer**：品牌简介、导航链接、联系方式、版权、语言切换。
+- **Header**（吸顶）：左侧「汽车保险」+ Logo（`public/next.svg`）；中间导航 Tab：首页 / 保险产品 / 投保指引 / 投保案例 / 关于我们；右侧语言切换（中/EN）+ 登录注册按钮（已登录时显示用户名与个人中心入口）。
+- **Footer**：四栏——品牌简介 / 导航链接 / 联系方式（地址、电话、邮箱，全部 mock）/ 微信客服（二维码 + 提示文案）；底栏为备案号（mock）+ 版权 + 演示数据声明。联系方式中的电话与邮箱是可点击链接（`tel:` / `mailto:`）。**页脚不提供语言切换**，语言入口只在 Header。
+- **首页悬浮工具轨**（`FloatingTools`）：仅首页、仅 xl（≥ 1280px）显示，视口右侧垂直居中；三项——在线客服（点击在按钮左侧弹出 Popover，内嵌 AI 客服对话，见 §10.4）、联系方式（悬浮提示框：电话 / 邮箱 / 微信二维码）、返回顶部（平滑滚动回顶）。
 - **登录/注册弹窗**：全局可唤起，含「登录」「注册」双 Tab。
 
 ---
@@ -226,7 +227,7 @@ Header 右侧用户名 /「个人中心」
 ### 8.4 导航与滚动规则
 
 - 全站使用 Next.js App Router 真实路由，**不使用 hash 路由**（禁止 `#/xxx` 形式路由，也不依赖 URL 片段做定位）。
-- 首页四个分区的锚点顺序与 Header Tab 顺序严格一致：首页 → 保险产品 → 投保指引 → 关于我们。
+- 首页五个分区的锚点顺序与 Header Tab 顺序严格一致：首页 → 保险产品 → 投保指引 → 投保案例 → 关于我们。
 - 在首页点击 Tab：页面平滑滚动到对应分区，不改变 URL、不刷新页面。
 - 在其他页面点击 Tab：先路由到该语言的首页，再平滑滚动到对应分区；滚动意图通过 `sessionStorage` 传递，避免在 URL 中留下 hash 或查询参数。
 - 手动滚动时，当前可视分区对应的 Tab 高亮跟随（基于 IntersectionObserver）。
@@ -279,7 +280,7 @@ middleware.ts          # 根路径重定向与语言段校验
 components/
   ui/                  # shadcn/ui 组件
   layout/              # Header、Footer、移动端抽屉、语言切换
-  sections/            # 首页四个分区
+  sections/            # 首页五个分区
   auth/                # 登录注册弹窗
   account/             # 个人中心侧边栏与各 Tab 内容
 lib/
@@ -294,6 +295,10 @@ lib/
       zh.json          # 中文文案字段
       en.json
     guide/
+      base.json
+      zh.json
+      en.json
+    cases/
       base.json
       zh.json
       en.json
@@ -351,6 +356,7 @@ type ApiCode = string;     // 取值见下方业务码表
 | GET | `/api/products` | 产品列表；可选 `?locale=zh\|en`，缺省按 `Accept-Language` | 否 |
 | GET | `/api/products/[slug]` | 产品详情，同上语言规则 | 否 |
 | GET | `/api/guide` | 投保指引内容（步骤/材料/FAQ） | 否 |
+| GET | `/api/cases` | 投保案例列表（10 条演示案例） | 否 |
 | POST | `/api/auth/register` | 注册：`{ username, email, password }` | 否 |
 | POST | `/api/auth/login` | 登录：`{ email, password }` | 否 |
 | POST | `/api/auth/logout` | 退出登录，清除会话 | 是 |
@@ -362,6 +368,8 @@ type ApiCode = string;     // 取值见下方业务码表
 | GET | `/api/orders/[id]` | 订单详情 | 是 |
 | POST | `/api/orders/[id]/cancel` | 取消订单 | 是 |
 | POST | `/api/orders/[id]/pay` | 模拟支付成功，订单转为已生效 | 是 |
+| POST | `/api/chat` | 客服对话，流式返回；**响应体是 AI SDK 的 UI 消息流，不套统一信封** | 否（登录态影响订单工具，见 §10.4） |
+| GET | `/api/chat` | 按 `?sessionId=` 取该会话的聊天记录，走统一信封 | 否 |
 
 **业务码表（`code` 字段取值）**
 
@@ -405,9 +413,13 @@ type ApiCode = string;     // 取值见下方业务码表
 
 **Guide**：`steps[]`（标题 + 说明 + 时长）、`materials[]`（材料名 + 说明 + 是否必需）、`faqs[]`（问题 + 答案）。
 
+**Case**：`id`、`sortOrder`、`productId`、`icon`、`claimDays`、`plateNo` 为语言无关字段；`city`、`ownerName`、`summary`、`quote` 按语言取值。卡片上的产品名不单独翻译，由 `productId` 关联产品数据按当前语言取，避免产品改名后案例里的名字不同步。
+
+**ChatSession**：`id`、`userId`（登录后写入，未登录保持 `null`）、`messages[]`、`updatedAt`；存于服务端内存，上限与淘汰规则见 §10.4。
+
 ### 10.3 数据文件与内存存储
 
-**字典（界面文案）**：`lib/i18n/dictionaries/zh.json`、`en.json`，按模块分键（`nav`、`home`、`products`、`guide`、`about`、`auth`、`account`、`common`、`errors`）。
+**字典（界面文案）**：`lib/i18n/dictionaries/zh.json`、`en.json`，按模块分键（`nav`、`home`、`products`、`guide`、`cases`、`about`、`auth`、`account`、`common`、`errors`）。
 
 **产品与指引 mock 数据**：拆成「语言无关 + 语言相关」两组 JSON，按 `slug` 合并。
 
@@ -421,6 +433,7 @@ lib/mock/products/
 - 选择拆分而非在 `zh.json` / `en.json` 里各自复制一份价格，是为了让价格只有一处定义，避免两份文件改价不同步。
 - 读取时按 `slug` 合并 `base` 与对应语言文件；加载时校验两份语言文件的 `slug` 集合与 `base` 完全一致，不一致直接抛错。
 - `guide/` 目录采用同样结构（`base.json` + `zh.json` + `en.json`）。
+- `cases/` 目录同样拆成三份：`base.json` 按 `id` 存语言无关字段，`zh.json` / `en.json` 按 `id` 存城市、车主、摘要与原话；加载时校验两份语言文件的 `id` 集合与 `base` 完全一致，并校验 `productId` 能在产品数据里找到。
 
 **内存存储**：用户、会话、订单存放在服务端进程内存中，使用 `Map` + 数组自建结构，不引入数据库。
 
@@ -449,6 +462,40 @@ export const store = (globalForStore.__swiStore ??= createStore());
 - 因此该方案仅适用于本地开发与演示；若后续需要持久化或多实例部署，需替换为数据库或共享存储。
 - 用户、订单、账户维护接口均需通过会话校验，禁止仅凭 `userId` 参数读取或修改他人数据。
 
+### 10.4 在线客服（AI 对话）
+
+首页悬浮工具轨的「在线客服」是一个 AI 客服助手，负责产品解答、投保指引答疑与订单查询。
+
+**技术构成**：前端对话组件用 AI Elements（`components/ai-elements/` 的 `Conversation` / `Message` / `PromptInput`，源码入库可改）；后端用 AI SDK 的 `ToolLoopAgent` 驱动，工具参数用 zod 约束；消息经 `POST /api/chat` 流式返回。
+
+**凭据与模型配置**：模型走 OpenAI 兼容接口（`@ai-sdk/openai-compatible` 的 `createOpenAICompatible`），四项配置全部从环境变量读取，仓库只提交模板文件 `.example.env`：
+
+| 变量 | 说明 |
+| --- | --- |
+| `AI_PROVIDER_NAME` | 提供方名称，仅用于标识与日志 |
+| `AI_BASE_URL` | 接口地址，需带 `/v1` 这类版本前缀 |
+| `AI_API_KEY` | 接口密钥 |
+| `AI_MODEL` | 模型 id |
+
+任一项缺失时接口直接返回 `INTERNAL_ERROR`，并提示去 `.example.env` 补配置。`.gitignore` 已忽略 `.env*`，真实密钥不入库。
+
+**工具（tools）**
+
+| 工具 | 参数（zod 约束） | 行为 |
+| --- | --- | --- |
+| `searchProducts` | `keyword?`、`category?`、`maxPrice?` | 查询产品数据，返回名称、价格、保额、保障内容、适用车型，最多 6 条 |
+| `queryOrders` | `userId` | 按 `userId` 查询内存中的真实订单，最多 10 条 |
+
+**业务规则**
+
+- **产品问题**：必须先调用 `searchProducts`，禁止凭记忆编造价格或保障内容；**未登录也能咨询产品**。
+- **订单问题**：必须先调用 `queryOrders`。传入的 `userId` 与服务端会话解析出的用户不一致或为空时，工具返回 `requiresLogin`，助手只提示「请先注册登录」，不返回任何订单信息。
+- **登录态判定**：一律由服务端读取 Cookie 会话，前端传参不参与判定，「请先登录」这道门无法从前端绕过。
+- **会话记录**：浏览器生成会话 id 存 localStorage，服务端用 `Map` 维护「会话 id → 消息列表」；**登录后发消息即把该会话绑定到 `userId`**，已绑定的会话只回给本人。会话上限 200 个（超出淘汰最久未更新者），单会话只保留最近 60 条消息。
+- **回答语言**：跟随页面语言（`zh` / `en`），与 URL 语言段一致。
+- **输入形态**：仅支持文本，不接受图片、文件、语音。
+- **范围外问题**：不编造，引导用户通过页脚的电话或邮箱联系人工客服。
+
 ---
 
 ## 11. 约束
@@ -460,8 +507,11 @@ export const store = (globalForStore.__swiStore ??= createStore());
 - **数据约束**：全部为 mock 数据，不得冒充真实保险条款；页面需明示「演示数据」。
 - **合规约束**：公司名称、地址、电话、备案号等均为占位内容，不得展示真实保险公司名称、牌照号或真实费率表。
 - **品牌约束**：站名「汽车保险」；Logo 使用项目自带 `public/next.svg`。
+- **素材约束**：首屏背景视频 `public/hall.mp4`（1280×720 / 24fps / 10s / 4.9MB），poster `public/hall-poster.jpg`（1280×720，取视频第 0.15s 帧）；微信二维码 `public/wx.jpg`。
 - **视觉方向**：走「专业可信」路数——深蓝主色 + 少量暖色点缀；具体色值、字体、阴影在 `design.md` 定义。
 - **性能约束**：列表使用稳定 key；图片懒加载；避免首屏过量动画。
+- **首屏媒体约束**：4.9MB 的 `hall.mp4` 不得参与 LCP——poster 用 `next/image` 的 `priority` 先上，视频等窗口 `load` 之后才挂载并淡入；滑出视口暂停解码；`prefers-reduced-motion: reduce` 时不加载视频。详见 `avoid.md` §5。
+- **客服约束**：在线客服为 AI 助手，只接受文本输入，不接受图片 / 文件 / 语音；模型凭据只从环境变量读取，仓库仅提交 `.example.env` 模板。
 - **无障碍约束**：导航、弹窗、表单、侧边栏 Tab 具备键盘可达性与 ARIA 语义。
 
 **非目标（本期不做）**
@@ -491,6 +541,9 @@ export const store = (globalForStore.__swiStore ??= createStore());
 | C13 | 会话滑动续期：每次通过校验的请求把有效期顺延 1 小时，不设绝对上限 | 第 3 轮 |
 | C14 | 修改资料允许同时修改用户名与邮箱 | 第 3 轮 |
 | C15 | 品牌视觉走「专业可信」路数：深蓝主色 + 少量暖色点缀 | 第 3 轮 |
+| C16 | 首页新增「投保案例」分区：横向无缝自动轮播，数据来自后端 `/api/cases` | 第 4 轮 |
+| C17 | 首页右侧悬浮工具轨：在线客服 / 联系方式 / 返回顶部；页脚补充联系方式与微信二维码，并移除页脚语言切换 | 第 4 轮 |
+| C18 | 在线客服 = AI 助手：AI SDK（`ToolLoopAgent` + zod 工具）+ AI Elements 组件，模型走 OpenAI 兼容接口，凭据从环境变量读取，回答语言跟随页面语言 | 第 4 轮 |
 
 ### 12.2 未决项
 

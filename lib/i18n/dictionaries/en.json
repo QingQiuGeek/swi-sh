@@ -8,6 +8,7 @@
     "errorDesc": "Please try again in a moment, or return to the home page.",
     "backHome": "Back to home",
     "viewDetail": "View details",
+    "buyNow": "Buy now",
     "browseProducts": "Browse plans",
     "viewAllProducts": "View all plans",
     "yearSuffix": "/ year",
@@ -22,6 +23,7 @@
     "home": "Home",
     "products": "Insurance Plans",
     "guide": "How to Buy",
+    "cases": "Cases",
     "about": "About Us"
   },
   "header": {
@@ -39,7 +41,6 @@
     "tagline": "A bilingual demo site for browsing car insurance plans and buying a policy online.",
     "navTitle": "Site navigation",
     "contactTitle": "Contact",
-    "languageTitle": "Language",
     "address": "12F, 1000 Century Avenue, Pudong New Area, Shanghai",
     "phone": "400-000-0000",
     "email": "support@example.com",
@@ -47,7 +48,19 @@
     "copyright": "© 2026 AutoShield Insurance (demo site)",
     "demoNotice": "Demo data: company name, address, phone, and filing number are placeholders."
   },
-  "home": {
+  "tools": {
+    "service": "Live support",
+    "contact": "Contact",
+    "backToTop": "Back to top",
+    "wechat": "WeChat support",
+    "wechatHint": "Scan with WeChat to add our support account",
+    "chatGreeting": "Hi, I'm the AutoShield Insurance assistant. Ask me about plans, pricing, or how to buy.",
+    "chatPlaceholder": "Type your question…",
+    "chatSend": "Send",
+    "chatStop": "Stop generating",
+    "chatError": "The assistant is unavailable right now. Please try again later, or reach us through the channels below.",
+    "chatLoading": "Loading conversation…"
+  },  "home": {
     "hero": {
       "eyebrow": "CAR INSURANCE",
       "titleLine1": "Car insurance you can read",
@@ -68,6 +81,11 @@
       "title": "How to Buy",
       "subtitle": "Four steps to complete a purchase, with the document checklist and common questions in one place.",
       "cta": "Read the full guide"
+    },
+    "cases": {
+      "eyebrow": "CUSTOMER STORIES",
+      "title": "Customer cases",
+      "subtitle": "Drivers on how they bought cover and settled a claim: the incident, how it was handled, and how long the payout took."
     },
     "about": {
       "eyebrow": "ABOUT US",
@@ -98,7 +116,6 @@
     "error": "Failed to load plan data",
     "detail": {
       "backToList": "Back to all plans",
-      "buyNow": "Buy now",
       "coveragesTitle": "What is covered",
       "noticeTitle": "Before you buy",
       "vehiclesLabel": "Eligible vehicles",
@@ -114,6 +131,14 @@
     "materialsTitle": "Documents needed",
     "faqsTitle": "Frequently asked questions",
     "cta": "Browse plans"
+  },
+  "cases": {
+    "trackLabel": "Customer case list",
+
+    "claimDays": "Claim paid in {days} days",
+
+    "empty": "No customer cases yet",
+    "emptyDesc": "Cases are being put together. Please check back later."
   },
   "about": {
     "title": "About Us",
@@ -203,6 +228,8 @@
     "emailPlaceholder": "you@example.com",
     "password": "Password",
     "passwordPlaceholder": "At least 8 characters with letters and digits",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "loginSubmit": "Sign in",
     "registerSubmit": "Create account",
     "loginSuccess": "Signed in",

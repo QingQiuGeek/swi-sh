@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type FieldPath } from "react-hook-form";
 import { toast } from "sonner";
 
+import { PasswordInput } from "@/components/forms/password-input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { apiSend } from "@/lib/api-client";
 import { errorMessage } from "@/lib/i18n/errors";
@@ -99,8 +99,7 @@ export function PasswordForm() {
             <FormItem>
               <FormLabel>{t.account.password.current}</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
+                <PasswordInput
                   autoComplete="current-password"
                   {...field}
                 />
@@ -117,8 +116,7 @@ export function PasswordForm() {
             <FormItem>
               <FormLabel>{t.account.password.new}</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
+                <PasswordInput
                   autoComplete="new-password"
                   placeholder={t.auth.passwordPlaceholder}
                   {...field}
@@ -136,8 +134,7 @@ export function PasswordForm() {
             <FormItem>
               <FormLabel>{t.account.password.confirm}</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
+                <PasswordInput
                   autoComplete="new-password"
                   {...field}
                 />

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Spec Docs"
+  short_description: "Spec-driven frontend docs, build, and acceptance"
+  default_prompt: "Use $frontend-spec-docs to write the six spec docs under wz-docs/ and implement against them."
