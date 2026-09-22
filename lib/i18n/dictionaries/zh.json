@@ -183,11 +183,9 @@
   "purchase": {
     "title": "投保信息填写",
     "subtitle": "填写被保人与车辆信息，提交后生成待支付订单。",
-    "summaryTitle": "投保产品",
+    "planTitle": "保险套餐信息",
     "insuredLegend": "被保人信息",
     "vehicleLegend": "车辆信息",
-    "feeTitle": "费用确认",
-    "amountLabel": "应付保费",
     "submit": "提交投保",
     "submitting": "提交中",
     "success": "投保成功，订单已生成",

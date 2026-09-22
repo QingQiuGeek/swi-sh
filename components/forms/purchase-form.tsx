@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Price } from "@/components/blocks/price";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field";
@@ -27,17 +26,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { apiSend } from "@/lib/api-client";
 import { errorMessage } from "@/lib/i18n/errors";
 import { useI18n } from "@/lib/i18n/provider";
-import type { OrderView, Product } from "@/lib/types";
+import type { OrderView } from "@/lib/types";
 import type { ApiCode } from "@/lib/types/api";
 import { createOrderSchema, MIN_REGISTER_YEAR, type OrderInput } from "@/lib/validation/order";
 
-/** 投保表单：被保人信息 + 车辆信息 + 费用确认 + 提交 */
-export function PurchaseForm({ product }: { product: Product }) {
+/** 短字段并排成一行：卡片比整页窄，窄屏自动回到单列 */
+const SHORT_FIELD_ROW = "grid gap-5 sm:grid-cols-2";
+
+/** 投保表单：被保人信息 + 车辆信息 + 提交。产品与价格由右侧「保险套餐信息」卡承担 */
+export function PurchaseForm({ productSlug }: { productSlug: string }) {
   const { locale, t } = useI18n();
   const router = useRouter();
   const [formError, setFormError] = useState<ApiCode | null>(null);
@@ -68,7 +69,7 @@ export function PurchaseForm({ product }: { product: Product }) {
     setFormError(null);
 
     const result = await apiSend<OrderView>("/api/orders", "POST", {
-      productSlug: product.slug,
+      productSlug,
       ...values,
     });
 
@@ -91,10 +92,10 @@ export function PurchaseForm({ product }: { product: Product }) {
           </Alert>
         ) : null}
 
-        <div className="grid gap-8 lg:grid-cols-2">
-          <FieldSet>
-            <FieldLegend>{t.purchase.insuredLegend}</FieldLegend>
-            <FieldGroup>
+        <FieldSet>
+          <FieldLegend>{t.purchase.insuredLegend}</FieldLegend>
+          <FieldGroup>
+            <div className={SHORT_FIELD_ROW}>
               <FormField
                 control={form.control}
                 name="insured.name"
@@ -105,23 +106,6 @@ export function PurchaseForm({ product }: { product: Product }) {
                       <Input
                         autoComplete="name"
                         placeholder={t.purchase.fields.name.placeholder}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="insured.idNo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.purchase.fields.idNo.label}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t.purchase.fields.idNo.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -148,12 +132,31 @@ export function PurchaseForm({ product }: { product: Product }) {
                   </FormItem>
                 )}
               />
-            </FieldGroup>
-          </FieldSet>
+            </div>
 
-          <FieldSet>
-            <FieldLegend>{t.purchase.vehicleLegend}</FieldLegend>
-            <FieldGroup>
+            <FormField
+              control={form.control}
+              name="insured.idNo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t.purchase.fields.idNo.label}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t.purchase.fields.idNo.placeholder}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
+
+        <FieldSet>
+          <FieldLegend>{t.purchase.vehicleLegend}</FieldLegend>
+          <FieldGroup>
+            <div className={SHORT_FIELD_ROW}>
               <FormField
                 control={form.control}
                 name="vehicle.plateNo"
@@ -163,40 +166,6 @@ export function PurchaseForm({ product }: { product: Product }) {
                     <FormControl>
                       <Input
                         placeholder={t.purchase.fields.plateNo.placeholder}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="vehicle.brandModel"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.purchase.fields.brandModel.label}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t.purchase.fields.brandModel.placeholder}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="vehicle.vin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t.purchase.fields.vin.label}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t.purchase.fields.vin.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -240,26 +209,48 @@ export function PurchaseForm({ product }: { product: Product }) {
                   </FormItem>
                 )}
               />
-            </FieldGroup>
-          </FieldSet>
-        </div>
+            </div>
 
-        <Separator />
+            <FormField
+              control={form.control}
+              name="vehicle.brandModel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t.purchase.fields.brandModel.label}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t.purchase.fields.brandModel.placeholder}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <p className="type-body-sm text-muted-foreground">
-              {t.purchase.feeTitle}
-            </p>
-            <p className="type-card-title text-foreground">{product.name}</p>
-          </div>
-          <Price value={product.price} size="lg" showPeriod />
-        </div>
+            <FormField
+              control={form.control}
+              name="vehicle.vin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t.purchase.fields.vin.label}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t.purchase.fields.vin.placeholder}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
 
         <Button
           type="submit"
           size="lg"
-          className="h-11 w-full lg:w-fit lg:self-end"
+          className="h-11 w-full sm:w-fit sm:self-end"
           disabled={submitting}
         >
           {submitting ? <Spinner data-icon="inline-start" /> : null}

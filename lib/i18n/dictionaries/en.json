@@ -183,11 +183,9 @@
   "purchase": {
     "title": "Enter your details",
     "subtitle": "Fill in the insured person and vehicle details. Submitting creates an unpaid order.",
-    "summaryTitle": "Selected plan",
+    "planTitle": "Plan details",
     "insuredLegend": "Insured person",
     "vehicleLegend": "Vehicle",
-    "feeTitle": "Cost summary",
-    "amountLabel": "Premium due",
     "submit": "Submit application",
     "submitting": "Submitting",
     "success": "Application submitted and the order was created",
