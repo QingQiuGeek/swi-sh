@@ -340,10 +340,12 @@ npx ai-elements@latest add conversation message prompt-input
 ### 8.7 悬浮工具轨
 
 - `FloatingTools` 只挂在首页（`app/[locale]/page.tsx`），其他页面不出现。
-- 断点 `hidden xl:block`：**≥ 1280px 才渲染**。1024–1279px 时内容区右缘会与 48px 宽的轨道重叠，宁可不显示。
+- **任何宽度都渲染，且始终在视口右侧垂直居中**：`fixed top-1/2 right-3 z-30 -translate-y-1/2 xl:right-4`。原先的 `hidden xl:block` 会让窗口一缩小整条轨道消失、功能入口不可达；中途试过「< 1280px 停靠右下角」，但那让位置在断点处跳变，最终统一为居中。
+- 已知代价：内容容器封顶 1200px，窄于此宽度时内容区右缘只剩容器内边距（桌面 40px / 平板 32px / 移动 20px），48px 的竖轨会压住正文 20–40px（实测 1100px → 20px、900px → 28px、390px → 40px）；≥ 1280px 因为两侧留白足够，压正文 0px。这是「入口任何宽度都可达 + 位置不跳变」换来的，属有意取舍。
 - 三个按钮纵向排列，固定在视口右侧、垂直居中，层级 `z-30`（低于 Header 的 `z-40`）。
 - 在线客服 → `Popover`（`side="left"`、`sideOffset={8}`），内容为 `ServiceChat`：头部（标题 + 服务时间）、对话区、输入区。对话区由 AI Elements 的 `Conversation` / `Message` / `PromptInput` 组成，消息状态与流式接收来自 `useChat`（`@ai-sdk/react`）。
 - 面板宽 320px（`w-[20rem]`），对话区固定高 269px（`h-[16.8rem]`），输入区默认约 65px，总高约 402px。矮视口由 Radix 的碰撞检测整体上移，不自己算位置。
+- 窄屏兜底：`Popover` / `HoverCard` 都加 `collisionPadding={16}` 与 `max-w-[calc(100vw_-_4.5rem)]`（Tailwind 里 `_` 代表空格，`calc` 的减号两侧必须有空格，否则是无效 CSS）。390px 下实测面板 318px，完整可见。
 - **输入行：发送按钮与输入框同排**。`PromptInputFooter` 用 `InputGroupAddon align="inline-end"`（不是 `block-end`）贴在输入框右下角；`block-end` 会让按钮另起一行、凭空多占约 46px。`InputGroup` 因此加 `h-auto items-end`，`PromptInputTextarea` 用 `flex-1 min-w-0`（横向 flex 里宽度撑满，高度仍归 `min-h` / `max-h` / `resize` 管）。
 - **输入框可手动调高**：`resize-y` + `min-h-9`（36px）/ `max-h-72`（288px），浏览器原生拖拽把手在输入框右下角，按钮留 `ml-1` 与把手分开。
 - 不用遮罩、不锁滚动、不改 URL。内部点击不关闭，`Esc` 关闭并把焦点还给触发按钮（Radix 默认行为，未覆写）。

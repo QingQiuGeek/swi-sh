@@ -41,7 +41,7 @@
 - `AuthDialog` 的密码框右侧带「小眼睛」按钮（`PasswordInput`），可切换明文 / 密文；登录与注册两个表单共用同一个组件。
 - `Toaster`：`sonner`，位置右下。
 - `ScrollRail`：仅首页、仅桌面显示，左侧竖向滚动指示轨。
-- `FloatingTools`：仅首页、仅 `xl`（≥ 1280px）显示，视口右侧垂直居中。在线客服 → `Popover`（`side="left"`，面板为 `ServiceChat` 会话外壳，宽 320px / 会话区高 269px）；联系方式 → `HoverCard`（`side="left"`，电话 / 邮箱 / 微信二维码）；返回顶部 → 平滑滚回顶部。
+- `FloatingTools`：仅首页；任何宽度都显示，且始终在视口右侧垂直居中（`top-1/2 -translate-y-1/2`，`right-3 xl:right-4`）。在线客服 → `Popover`（`side="left"`，面板为 `ServiceChat` 会话外壳，宽 320px / 会话区高 269px）；联系方式 → `HoverCard`（`side="left"`，电话 / 邮箱 / 微信二维码）；返回顶部 → 平滑滚回顶部。
 - 联系方式复用 `ContactChannels`（`components/blocks/contact-channels.tsx`），客服面板见 `components/blocks/service-chat.tsx`。
 
 ### 1.4 数据获取方式
@@ -758,5 +758,5 @@ Empty
 - [ ] 所有金额按语言格式化并启用 `tabular-nums`。
 - [ ] 全站出现「演示数据」声明的位置至少包含：首页、关于我们、页脚。
 - [ ] 页脚没有语言切换控件，语言入口只在 Header。
-- [ ] 悬浮工具轨只在首页且 ≥ 1280px 显示；联系方式提示框内容与页脚一致；返回顶部平滑滚动、不改 URL。
+- [ ] 悬浮工具轨只在首页出现，在 360–1920px 全部宽度可见，且任何宽度下轨道中线与视口中线重合；窄屏下 320px 客服面板完整落在视口内；联系方式提示框内容与页脚一致；返回顶部平滑滚动、不改 URL。
 - [ ] 密码框（登录 / 注册 / 修改资料 / 修改密码）右侧「小眼睛」可切换明文 / 密文，切换不丢失已输入内容。
