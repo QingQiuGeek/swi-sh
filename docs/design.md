@@ -57,11 +57,13 @@
 
 | 令牌 | 色值 | OKLCH | 用途 |
 | --- | --- | --- | --- |
-| `--highlight` | `#9E5E18` | `oklch(0.5430 0.1148 62.14)` | 徽标文字、价格强调、滚动指示轨激活点 |
+| `--highlight` | `#98590F` | `oklch(0.5250 0.1148 62.14)` | 分区眉标（含前置短横）、常见问题 `+ / −`、徽标文字、价格强调、滚动指示轨激活点 |
 | `--highlight-foreground` | `#FFFFFF` | `oklch(1 0 0)` | 暖色实底上的文字 |
 | `--highlight-soft` | `#FBF0E2` | `oklch(0.9600 0.0220 74.10)` | 「热销 / 新品」徽标底色 |
 
-> 暖色只有这一组，**总占比 < 10%**，且只出现在小面积元素上（徽标、指示点、数字强调）。
+> 暖色只有这一组。用途限定为**分区底色（「关于我们」整栏）、眉标、徽标、指示点、数字与图标强调**；**不用于正文，也不用于大面积按钮**。整页暖色面积占比约 1/7（一栏底色 + 若干小元素），这是 §4.2 底色节奏刻意留出的唯一一处暖色「换气口」。
+
+> v1.1 把 `--highlight` 从 `oklch(0.5430 …)`（`#9E5E18`）调深到 `oklch(0.5250 …)`（`#98590F`）：眉标改用暖棕后要同时落在 `background` / `muted` / `secondary` / `highlight-soft` 四档浅底上，原明度在最深的 `secondary` 上只有 4.43:1（不达标），调深后最低 4.77:1。
 
 ### 2.3 订单状态色（自定义令牌）
 
@@ -91,8 +93,16 @@
 | `secondary-foreground` / `secondary` | 9.77 | AA 通过 |
 | `muted-foreground` / `background` | 5.24 | AA 通过 |
 | `muted-foreground` / `card` | 5.44 | AA 通过 |
-| `highlight` / `highlight-soft` | 4.59 | AA 通过（小字徽标） |
-| `highlight` / `background` | 4.97 | AA 通过 |
+| `muted-foreground` / `muted`（投保指引栏底） | 4.97 | AA 通过 |
+| `muted-foreground` / `secondary`（投保案例栏底） | 4.66 | AA 通过 |
+| `muted-foreground` / `highlight-soft`（关于我们栏底） | 4.84 | AA 通过 |
+| `primary` 作标题 / `muted` | 10.41 | AA 通过 |
+| `primary` 作标题 / `highlight-soft` | 10.13 | AA 通过 |
+| `highlight` / `background` | 5.36 | AA 通过（分区眉标、FAQ `+ / −`） |
+| `highlight` / `muted` | 5.09 | AA 通过 |
+| `highlight` / `secondary` | 4.77 | AA 通过（四档浅底里最紧的一处） |
+| `highlight` / `highlight-soft` | 4.95 | AA 通过（眉标、小字徽标） |
+| `primary-foreground` / `primary`（CTA 通栏与其上的实心白按钮） | 11.39 | AA 通过 |
 | `status-pending-foreground` / `status-pending` | 5.38 | AA 通过 |
 | `status-active-foreground` / `status-active` | 5.85 | AA 通过 |
 | `status-cancelled-foreground` / `status-cancelled` | 4.89 | AA 通过 |
@@ -141,7 +151,7 @@
   --input: oklch(0.6219 0.0512 258.35);
   --ring: oklch(0.3495 0.0961 255.60);
 
-  --highlight: oklch(0.5430 0.1148 62.14);
+  --highlight: oklch(0.5250 0.1148 62.14);
   --highlight-foreground: oklch(1 0 0);
   --highlight-soft: oklch(0.9600 0.0220 74.10);
 
@@ -285,7 +295,34 @@
 | 首页 Hero 上下内边距 | 64px | 96px |
 | 首页 Hero 最小高度 | 视口高 − Header 高（内容更高时自然撑开） | 同左 |
 
-分区之间靠留白切分，不使用分割线或色块硬切（见 `visual.md` §6）。
+**分区底色节奏（首页，自上而下）**——底色必须打在 `<section>` 上做通栏，不能打在 `Container` 上（否则左右留白仍在冷白底上，像「贴了一块色纸」）：
+
+| 顺序 | 分区 | 底色 | 边界处理 |
+| --- | --- | --- | --- |
+| 1 | 首屏 `#home` | 视频 + 深蓝径向遮罩（同色系实心） | — |
+| 2 | 保险产品 `#products` | `background` `#F8FBFE` | 深 → 浅，不加线 |
+| 3 | 投保指引 `#guide` | `muted` `#F1F5FA` | 浅 → 浅，`border-t border-border` 1px |
+| 4 | 投保案例 `#cases` | `secondary` `#E8EEF7` | 浅 → 浅，`border-t` 1px |
+| 5 | 关于我们 `#about` | `highlight-soft` `#FBF0E2`（暖米） | 浅 → 浅，`border-t` 1px |
+| 6 | 立即投保通栏（无 id） | `primary` `#123A6B`，桌面高约 165px | 浅 → 深，不加线 |
+| 7 | 常见问题（无 id） | `background` `#F8FBFE` | 深 → 浅，不加线 |
+| 8 | 页脚 | `primary` | 深底本身就是「页面结束」信号 |
+
+- 三档冷色底按 248 → 241 → 232 逐级压深，相邻档差 ≥ 7 个色阶。**踩过的坑**：`bg-secondary/65` 混出来是 `rgb(240,244,250)`，与 `bg-muted` 的 `rgb(241,245,250)` 只差 1 个色阶，加了发丝线也像同一栏 —— 投保案例栏因此改用不透明的 `bg-secondary`。
+- 第 5 栏是全页唯一的暖色底，也是进入深色通栏前的「换气口」；第 6 / 7 栏都不带 section id，不参与分区导航。
+
+**分区抬头配色**（改 `components/blocks/section-heading.tsx` 一处，全站同时生效）：
+
+| 部位 | 取值 | 说明 |
+| --- | --- | --- |
+| 眉标 | `text-highlight` `#98590F` | 在四档浅底上最低 4.77:1（见 §2.4） |
+| 眉标前置短横 | 28 × 2px，`bg-current` | 用 `currentColor`，颜色自动跟随眉标 |
+| 大标题 | `text-primary` `#123A6B` | 深蓝取代原先的近黑，是全站「标题加颜色」的唯一来源 |
+| 标题第二行 | `text-highlight` | `titleAccent`，首页未启用 |
+| 副标题 | `text-muted-foreground` | 不变 |
+
+- 标题的颜色只来自**单一纯色 + 明度差**：禁止渐变文字、`bg-clip-text`、彩色发光、描边字（见 `avoid.md` §1）。
+- **不引入衬线字体**：全站标题仍为 Inter + Noto Sans SC 无衬线（见 §3.1）。
 
 ### 4.3 框架尺寸
 

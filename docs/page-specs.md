@@ -119,25 +119,30 @@ Hero（分区 id=home，深底）
 ├─ 价格行：「年保费 低至 ¥950 起」——取产品列表最低价，装在实心深蓝面板里（bg-primary/88 + border-transparent，Price 用 tone="inverted"），不是白色卡片
 └─ 双 CTA：实心白「浏览保险产品」（滚动到 products，variant=inverse）+ 白描边「查看投保指引」（滚动到 guide，variant=outline-inverse）
 
-Products 分区（id=products）
+Products 分区（id=products，底色 background）
 ├─ SectionHeading：眉标 + 「保险产品」+ 副标题
 ├─ ProductGrid（6 张卡片，桌面 3 列 / 平板 2 列 / 移动 1 列）
 └─ 文字链接「查看全部产品」→ /[locale]/products
 
-Guide 分区（id=guide）
+Guide 分区（id=guide，底色 muted，上边界 1px 发丝线）
 ├─ SectionHeading
 ├─ StepList（4 步流程）
 └─ 文字链接「查看完整投保指引」→ /[locale]/guide
 
-Cases 分区（id=cases）
+Cases 分区（id=cases，底色 secondary，上边界 1px 发丝线）
 ├─ SectionHeading
 └─ CaseCarousel（案例卡横向轨道：匀速从右向左无缝循环，无播放控件）
 
-About 分区（id=about）
+About 分区（id=about，底色 highlight-soft 暖米，上边界 1px 发丝线）
 ├─ SectionHeading
 ├─ 公司介绍摘要（两到三句）
 ├─ StatBlock（4 项核心数据）
 └─ 文字链接「了解我们」→ /[locale]/about
+
+「立即投保」CTA 通栏（无 section id，不参与分区导航）
+├─ 整幅 bg-primary 深蓝通栏（桌面高约 165px，移动端文案与按钮上下堆叠）
+├─ 左：标题（type-h2，反白）+ 一句说明（primary-foreground/80）
+└─ 右：实心白按钮「立即投保」（h-11 / 44px，variant=inverse）→ 滚动到 products 分区
 
 常见问题分区（无 section id，不参与分区导航）
 ├─ SectionHeading（FAQ / 常见问题 / 副标题）
@@ -145,12 +150,13 @@ About 分区（id=about）
 ```
 
 - 五个分区垂直顺序与 Header Tab 顺序严格一致。
-- 「常见问题」是页面末尾的第六栏，内容复用投保指引的 FAQ，但**不进入** `SECTION_IDS`：Header Tab、左侧指示轨、移动端抽屉都只认五个分区，这一栏不带 section id，也不参与滚动高亮。
-- 因为末尾出现了不属于分区导航的区块（常见问题、页脚），`useActiveSection` 在「所有分区都不可见」时退回「上方最近的分区」，避免滚到底时 Tab 与指示轨跳回「首页」。
+- 「立即投保」通栏与「常见问题」都不带 section id：Header Tab、左侧指示轨、移动端抽屉只认五个分区，这两栏不参与滚动高亮。通栏放在「关于我们」与「常见问题」之间。
+- 「常见问题」内容复用投保指引的 FAQ。
+- 因为末尾出现了不属于分区导航的区块（「立即投保」通栏、常见问题、页脚），`useActiveSection` 在「所有分区都不可见」时退回「上方最近的分区」，避免滚到底时 Tab 与指示轨跳回「首页」。
 - Hero 只负责首屏：高度 = 视口高 − Header 高，媒体层在 Hero 内部绝对定位（不是 fixed），滚出视口即随 Hero 消失。
-- 首屏是深底，Hero 之外的分区仍为冷白底（`visual.md` §4）。
+- 首屏是深底；Hero 之外的分区按 `design.md` §4.2 的底色节奏排布（冷白 → 冷灰蓝 → 冷蓝 → 暖米 → 深蓝通栏 → 冷白），不再是一条冷白底到底。
 - 每个分区加 `scroll-margin-top`，值为 Header 高度。
-- 分区之间靠留白切分，不用分割线。
+- 分区之间靠**底色节奏 + 留白**切分（完整节奏表见 `design.md` §4.2）：浅色档位之间补 1px `border-t`，深色与浅色相接处不加线。
 
 ### 3.2 状态
 
@@ -191,6 +197,9 @@ About 分区（id=about）
 - [ ] 案例卡片上的产品名与产品数据中的名称一致（由 `productId` 关联，不单独翻译）。
 - [ ] 页面末尾出现「常见问题」栏，5 条 FAQ 与 `/[locale]/guide` 同源（同一份 `getGuide(locale).faqs`）；切到 `en` 后问题与答案全部为英文。
 - [ ] Header 只有五个 Tab，没有「常见问题」；滚到页面最底部时 Header Tab 与左侧指示轨仍停在「关于我们」，不跳回「首页」。
+- [ ] 相邻分区的底色可以一眼区分（产品 background / 指引 muted / 案例 secondary / 关于我们 highlight-soft / 通栏 primary / 常见问题 background），浅色档位之间为 1px 发丝线。
+- [ ] 眉标为暖棕 `#98590F` 且带 28 × 2px 前置短横，大标题为主色深蓝；两者在各自分区底色上对比度 ≥ 4.5:1。
+- [ ] 「关于我们」之后、「常见问题」之前有一条深蓝「立即投保」通栏，点击按钮滚动到 products 分区；Header 仍是首页 / 保险产品 / 投保指引 / 投保案例 / 关于我们五项，没有因为新栏位多出 Tab。
 - [ ] 页面上出现「演示数据」声明。
 
 ---

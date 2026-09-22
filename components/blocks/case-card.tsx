@@ -48,7 +48,12 @@ export function CaseCard({
   const Icon = CASE_ICON_COMPONENTS[item.icon];
 
   return (
-    <Card className={cn("h-full", className)}>
+    <Card
+      className={cn(
+        "h-full shadow-xs transition-shadow duration-150 hover:shadow-sm",
+        className,
+      )}
+    >
       <CardHeader>
         <div
           aria-hidden="true"

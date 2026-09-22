@@ -18,7 +18,10 @@ export function AboutSection({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <section id="about" className="scroll-mt-15 lg:scroll-mt-18">
+    <section
+      id="about"
+      className="scroll-mt-15 border-t border-border bg-highlight-soft lg:scroll-mt-18"
+    >
       <Container className="flex flex-col gap-8 py-16 lg:gap-12 lg:py-24">
         <SectionHeading
           eyebrow={t.home.about.eyebrow}
@@ -30,7 +33,10 @@ export function AboutSection({ locale }: { locale: Locale }) {
           {t.about.paragraphs[0]}
         </p>
 
-        <StatBlock items={stats} />
+        <StatBlock
+          items={stats}
+          className="[&>div]:border-highlight/25"
+        />
 
         <Link
           href={`/${locale}/about`}

@@ -8,9 +8,12 @@ import type { GuideStep } from "@/lib/types";
  */
 export function StepList({ steps }: { steps: GuideStep[] }) {
   return (
-    <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-0">
       {steps.map((step) => (
-        <li key={step.id} className="flex flex-col gap-3">
+        <li
+          key={step.id}
+          className="flex flex-col gap-3 lg:pr-6 lg:not-first:border-l lg:not-first:border-border lg:not-first:pl-6"
+        >
           <span className="flex size-8 items-center justify-center rounded-full bg-primary type-caption text-primary-foreground">
             {step.sortOrder}
           </span>
@@ -29,9 +32,12 @@ export function StepList({ steps }: { steps: GuideStep[] }) {
 /** 步骤列表的加载态 */
 export function StepListSkeleton() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-0">
       {["s1", "s2", "s3", "s4"].map((key) => (
-        <div key={key} className="flex flex-col gap-3">
+        <div
+          key={key}
+          className="flex flex-col gap-3 lg:pr-6 lg:not-first:border-l lg:not-first:border-border lg:not-first:pl-6"
+        >
           <div className="size-8 rounded-full bg-muted" />
           <div className="h-5 w-3/4 rounded-sm bg-muted" />
           <div className="h-4 w-full rounded-sm bg-muted" />

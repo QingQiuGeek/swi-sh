@@ -26,7 +26,7 @@ Tokens   →  Components   →  Blocks   →  Pages
 
 补充两层，职责介于 Blocks 与 Pages 之间：
 
-- `components/sections/` —— **仅首页使用**的分区编排（首页五分区），不跨页复用；首屏视频层 `hero-media.tsx` 也在这里（它是 Hero 内部唯一需要交互状态的叶子）。
+- `components/sections/` —— **仅首页使用**的分区编排（五个带 id 的分区，外加「立即投保」通栏与「常见问题」两个不参与导航的区块），不跨页复用；首屏视频层 `hero-media.tsx` 也在这里（它是 Hero 内部唯一需要交互状态的叶子）。
 - `components/layout/` —— 全站骨架（Header / Footer / Container / 移动端抽屉 / 语言切换 / 滚动指示轨 / 悬浮工具轨）。
 - `components/forms/`、`components/auth/` —— 有交互状态的重型 Block（投保表单、账户表单、登录注册弹窗）。
 
@@ -227,7 +227,7 @@ npx ai-elements@latest add conversation message prompt-input
 
 | Block | 说明 |
 | --- | --- |
-| `SectionHeading` | 分区抬头模版：眉标 + 大标题（可两段换色）+ 副标题。所有分区必须用它 |
+| `SectionHeading` | 分区抬头模版：眉标（暖棕 + 28 × 2px 前置短横）+ 大标题（主色深蓝，可两段换色）+ 副标题。带 id 的分区与内容页必须用它 |
 | `ProductCard` | 产品卡片：名称、卖点、价格、保额、服务内容摘要、标签、双 CTA（描边「查看详情」+ 实心「立即投保」） |
 | `ProductGrid` | 响应式网格（桌面 3 / 平板 2 / 移动 1），内含 loading / empty / error |
 | `Price` | 价格展示：货币格式化 + `tabular-nums` + 可选「/ 年」单位 |
@@ -386,7 +386,8 @@ npx ai-elements@latest add conversation message prompt-input
 
 - **`Container`**：统一处理最大宽度 1200px 与响应式左右内边距（20 / 32 / 40px）。页面与分区不得各自写 `max-w-*` 与 `px-*`。
 - **分区结构**：每个分区 = `Container` + `SectionHeading` + 内容 + 可选 CTA。抬头模版必须统一，五个分区看起来要像一套系统。
-- **分区切换靠留白**，不用分割线或色块硬切（垂直内边距见 `design.md` §4.2）。
+- **分区底色节奏**：底色打在 `<section>` 上做通栏（不能打在 `Container` 上），相邻分区必须能一眼区分；浅 → 浅补 1px `border-t border-border`，浅 → 深不加线。完整节奏表见 `design.md` §4.2。
+- **分区切换靠「底色节奏 + 留白」**，不用厚重分割线或高对比撞色（垂直内边距见 `design.md` §4.2）。
 - **无缝循环轨道**（投保案例）：全站唯一的自动播放位。结构是「`overflow-hidden` 视口 + `w-max` 行」；卡片渲染两份，用 `requestAnimationFrame` 按时间差匀速位移 `transform: translate3d()`（不是改 `scrollLeft`、不是逐卡跳），位移越过「一份的宽度」就整体减掉一份，因此永远衔接、不会回卷。用 `ResizeObserver` 重量一份宽度（语言 / 字号 / 窗口变化都会改宽度）。必须做到：① 不用 `snap-*`（会和连续位移打架）；② 悬停与聚焦时停住（`tabIndex=0` 让键盘用户也能停）；③ `prefers-reduced-motion: reduce` 时不动画；④ 单帧步长按时间差计算并设上限，避免标签页回到前台时跳一大段。横向溢出只能被视口裁剪，**不得传到页面级**（360px 无横向滚动条）。
 - **页面骨架**：
 

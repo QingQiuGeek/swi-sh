@@ -18,7 +18,10 @@ export function GuideSection({
   const t = getDictionary(locale);
 
   return (
-    <section id="guide" className="scroll-mt-15 lg:scroll-mt-18">
+    <section
+      id="guide"
+      className="scroll-mt-15 border-t border-border bg-muted lg:scroll-mt-18"
+    >
       <Container className="flex flex-col gap-8 py-16 lg:gap-12 lg:py-24">
         <SectionHeading
           eyebrow={t.home.guide.eyebrow}

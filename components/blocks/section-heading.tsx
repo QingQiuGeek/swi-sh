@@ -22,16 +22,19 @@ export function SectionHeading({
 }) {
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      <p className="type-eyebrow text-muted-foreground">{eyebrow}</p>
+      <p className="flex items-center gap-2.5 type-eyebrow text-highlight">
+        <span aria-hidden="true" className="h-0.5 w-7 shrink-0 bg-current" />
+        {eyebrow}
+      </p>
       <Heading
         className={cn(
-          "text-balance text-foreground",
+          "text-balance text-primary",
           Heading === "h1" ? "type-h1" : "type-h2",
         )}
       >
         {title}
         {titleAccent ? (
-          <span className="block text-primary">{titleAccent}</span>
+          <span className="block text-highlight">{titleAccent}</span>
         ) : null}
       </Heading>
       {subtitle ? (
