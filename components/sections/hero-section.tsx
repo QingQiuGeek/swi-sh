@@ -33,12 +33,12 @@ export function HeroSection({
 
       <Container className="relative z-10 grid min-h-[calc(100svh-60px)] content-center gap-12 py-16 lg:min-h-[calc(100svh-72px)] lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center lg:gap-16 lg:py-24">
         <div className="flex flex-col gap-6">
-          <p className="type-eyebrow text-primary-foreground/70">
+          <p className="type-eyebrow text-primary-foreground">
             {t.home.hero.eyebrow}
           </p>
 
           <h1 className="type-display text-balance">
-            <span className="block text-primary-foreground/75">
+            <span className="block text-primary-foreground/92">
               {t.home.hero.titleLine1}
             </span>
             <span className="block text-primary-foreground">
@@ -46,7 +46,7 @@ export function HeroSection({
             </span>
           </h1>
 
-          <p className="type-body-lg max-w-2xl text-primary-foreground/80">
+          <p className="type-body-lg max-w-2xl text-primary-foreground/95">
             {t.home.hero.subtitle}
           </p>
 
@@ -66,15 +66,17 @@ export function HeroSection({
           </div>
         </div>
 
-        <Card className="order-first lg:order-none">
+        {/* 深底上的价格面板：整块实心深蓝（同色系、无边框），像视频上的一层「画布」，
+            而不是一块跳出来的白卡。注意不能用 backdrop-blur（avoid.md §1 禁止磨砂玻璃）。 */}
+        <Card className="order-first items-start border-transparent bg-primary/88 text-primary-foreground shadow-none lg:order-none">
           <CardContent className="flex flex-col gap-3">
-            <p className="type-body-sm text-muted-foreground">
+            <p className="type-body-sm text-primary-foreground/80">
               {t.home.hero.priceLabel}
             </p>
-            <Price value={lowestPrice} size="lg" showPeriod />
+            <Price value={lowestPrice} size="lg" showPeriod tone="inverted" />
             <Link
               href={`/${locale}/products`}
-              className="type-body-sm w-fit text-primary underline-offset-4 hover:underline"
+              className="type-body-sm w-fit text-primary-foreground/85 underline-offset-4 hover:text-primary-foreground hover:underline"
             >
               {t.common.viewAllProducts}
             </Link>

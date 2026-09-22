@@ -42,6 +42,21 @@ export function useActiveSection(ids: readonly SectionId[]): SectionId | null {
           }
         }
 
+        // 首页末尾有不属于分区导航的区块（常见问题、页脚），滚到底时五个分区可能全部不可见，
+        // 此时退回「上方最近的分区」，否则 Header 与指示轨会突然跳回「首页」。
+        if (best === null) {
+          best =
+            ids
+              .filter((id) => {
+                const element = document.getElementById(id);
+                return element
+                  ? element.getBoundingClientRect().top <
+                      window.innerHeight / 2
+                  : false;
+              })
+              .pop() ?? ids[0];
+        }
+
         setActive(best);
         setCurrentSection(best);
       },

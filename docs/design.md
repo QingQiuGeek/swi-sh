@@ -85,7 +85,9 @@
 | `foreground` / `background` | 16.64 | AA 通过 |
 | `primary-foreground` / `primary` | 11.39 | AA 通过 |
 | `primary` 作文字 / `background` | 10.97 | AA 通过 |
-| `primary-foreground` / 首屏视频遮罩合成后的背景（实测最亮处，多个视频帧取样） | 5.59 | AA 通过（正文 4.5 阈值） |
+| `primary-foreground`（纯白） / 首屏视频遮罩合成后的背景（实测最亮处，5 帧取样） | 4.98 | AA 通过（正文 4.5 阈值） |
+| `primary-foreground/95`（Hero 副标题） / 同上 | 4.65 | AA 通过（正文 4.5 阈值） |
+| `primary-foreground/92`（Hero 大标题第一行） / 同上 | 4.52 | AA 通过（大字 3:1 阈值） |
 | `secondary-foreground` / `secondary` | 9.77 | AA 通过 |
 | `muted-foreground` / `background` | 5.24 | AA 通过 |
 | `muted-foreground` / `card` | 5.44 | AA 通过 |
@@ -298,7 +300,8 @@
 | 悬浮工具轨 | 宽 48px（`size-11` 按钮 + `p-0.5` 内边距），距视口右 16px，仅 xl（≥ 1280px）显示 |
 | 首屏 Hero 最小高度 | `calc(100svh − 60px)`，桌面 `calc(100svh − 72px)`（减掉吸顶 Header） |
 | 首屏媒体层 | 绝对定位铺满 Hero（非 `fixed`）+ `overflow-hidden`；poster 与视频均 `object-cover` + `brightness(0.6)` |
-| 首屏遮罩 | 覆盖在媒体层之上、内容之下；径向（`bg-radial`）中心最淡、向四角渐深：`primary/45` → `via primary/70` → `primary/88` |
+| 首屏遮罩 | 覆盖在媒体层之上、内容之下；径向（`bg-radial`）中心最淡、向四角渐深：`primary/38` → `via primary/55` → `primary/72` |
+| 首屏价格面板 | 同色系实心深蓝（`bg-primary/88` + `border-transparent`），面板内文字全部用 `primary-foreground` 系；不用纯白卡片（深底上会「跳」出来），也不用 `backdrop-blur`（`avoid.md` §1 禁止磨砂玻璃） |
 
 ### 4.4 组件尺寸
 

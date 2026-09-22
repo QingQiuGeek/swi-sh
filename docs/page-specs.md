@@ -113,10 +113,10 @@
 ```
 Hero（分区 id=home，深底）
 ├─ 媒体层：poster（next/image，priority）→ hall.mp4 → 深蓝径向遮罩（中心最淡、四角最深）；绝对定位铺满 Hero
-├─ 眉标（eyebrow，大写 + 字距，primary-foreground/70）
-├─ 主标题（两行；第一行 primary-foreground/75、第二行纯白，用同一白色系的明度差代替浅底的换色）
-├─ 副标题（body-lg，primary-foreground/80）
-├─ 价格行：「年保费 低至 ¥950 起」——取产品列表最低价，用 Price 组件（白色 Card 浮在深底上）
+├─ 眉标（eyebrow，大写 + 字距，纯白 primary-foreground）
+├─ 主标题（两行；第一行 primary-foreground/92、第二行纯白，用同一白色系的明度差代替浅底的换色）
+├─ 副标题（body-lg，primary-foreground/95）
+├─ 价格行：「年保费 低至 ¥950 起」——取产品列表最低价，装在实心深蓝面板里（bg-primary/88 + border-transparent，Price 用 tone="inverted"），不是白色卡片
 └─ 双 CTA：实心白「浏览保险产品」（滚动到 products，variant=inverse）+ 白描边「查看投保指引」（滚动到 guide，variant=outline-inverse）
 
 Products 分区（id=products）
@@ -138,9 +138,15 @@ About 分区（id=about）
 ├─ 公司介绍摘要（两到三句）
 ├─ StatBlock（4 项核心数据）
 └─ 文字链接「了解我们」→ /[locale]/about
+
+常见问题分区（无 section id，不参与分区导航）
+├─ SectionHeading（FAQ / 常见问题 / 副标题）
+└─ FaqAccordion（复用投保指引的 5 条常见问题）
 ```
 
 - 五个分区垂直顺序与 Header Tab 顺序严格一致。
+- 「常见问题」是页面末尾的第六栏，内容复用投保指引的 FAQ，但**不进入** `SECTION_IDS`：Header Tab、左侧指示轨、移动端抽屉都只认五个分区，这一栏不带 section id，也不参与滚动高亮。
+- 因为末尾出现了不属于分区导航的区块（常见问题、页脚），`useActiveSection` 在「所有分区都不可见」时退回「上方最近的分区」，避免滚到底时 Tab 与指示轨跳回「首页」。
 - Hero 只负责首屏：高度 = 视口高 − Header 高，媒体层在 Hero 内部绝对定位（不是 fixed），滚出视口即随 Hero 消失。
 - 首屏是深底，Hero 之外的分区仍为冷白底（`visual.md` §4）。
 - 每个分区加 `scroll-margin-top`，值为 Header 高度。
@@ -176,13 +182,15 @@ About 分区（id=about）
 - [ ] 首屏铺满 `hall.mp4`，静音循环自动播放、无播放控件；`hall-poster.jpg` 先于视频出现，视频播起来后淡入（不闪黑帧）。
 - [ ] `hall.mp4` 不参与 LCP：`prefers-reduced-motion: reduce` 下该请求根本不发出，只加载 poster。
 - [ ] 滑到 products 及以下分区后视频暂停并从视口消失；滚回首屏恢复播放。
-- [ ] 首屏眉标 / 标题 / 副标题 / CTA 压在视频最亮处对比度 ≥ 4.5:1（实测 5.6:1）。
+- [ ] 首屏眉标 / 标题 / 副标题 / CTA 压在视频最亮处对比度 ≥ 4.5:1（实测 4.98:1，半透明白档位 4.65 / 4.52）。
 - [ ] 左侧滚动指示轨的文字在深底首屏上可读。
 - [ ] 案例分区的数据与 `/api/cases` 返回值一致（同一份 `getCases(locale)`）；切换语言后案例文案全部切换，无另一种语言残留。
 - [ ] 案例轨道匀速从右向左连续移动（约 80px/秒），位移到一份卡片宽度时无缝衔接，**不出现停顿、不回卷到开头**。
 - [ ] 鼠标悬停到轨道上时停住，移开 1 秒后从原位继续（不跳）；`prefers-reduced-motion: reduce` 下轨道保持静止。
 - [ ] 轨道内没有任何播放 / 上一张 / 下一张按钮。
 - [ ] 案例卡片上的产品名与产品数据中的名称一致（由 `productId` 关联，不单独翻译）。
+- [ ] 页面末尾出现「常见问题」栏，5 条 FAQ 与 `/[locale]/guide` 同源（同一份 `getGuide(locale).faqs`）；切到 `en` 后问题与答案全部为英文。
+- [ ] Header 只有五个 Tab，没有「常见问题」；滚到页面最底部时 Header Tab 与左侧指示轨仍停在「关于我们」，不跳回「首页」。
 - [ ] 页面上出现「演示数据」声明。
 
 ---

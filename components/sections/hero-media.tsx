@@ -86,9 +86,9 @@ export function HeroMedia() {
         />
       ) : null}
 
-      {/* 深蓝遮罩：中心最淡、向四周渐深（椭圆，four corners 最重）。淡到既不压住画面，
-          又保证白色文案在任意帧上都够对比（design.md §2.4 的 9.5:1 会随之下调，实测见 page-specs.md §3.4） */}
-      <div className="absolute inset-0 bg-radial from-primary/45 via-primary/70 to-primary/88" />
+      {/* 深蓝遮罩：中心最淡、向四周渐深（椭圆，四角最重）。比初版整体调淡——中段与四角降幅最大，
+          画面因此透出来；中心是文案所在处，只微调，保证白字对比度仍过 4.5:1（实测见 design.md §2.4） */}
+      <div className="absolute inset-0 bg-radial from-primary/38 via-primary/55 to-primary/72" />
     </div>
   );
 }

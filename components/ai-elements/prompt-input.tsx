@@ -921,7 +921,7 @@ export const PromptInput = ({
         ref={formRef}
         {...props}
       >
-        <InputGroup className="overflow-hidden">{children}</InputGroup>
+        <InputGroup className="h-auto items-end overflow-hidden">{children}</InputGroup>
       </form>
     </>
   );
@@ -1057,9 +1057,9 @@ export const PromptInputTextarea = ({
   return (
     <InputGroupTextarea
       className={cn(
-        // flex-1 会把高度交给父级弹性布局（InputGroup 是纵向 flex），导致 height 失效、
-        // 拖拽调整高度不起作用，这里用 flex-none 把高度控制权还给 textarea
-        "field-sizing-fixed flex-none min-h-9 max-h-48 resize-y",
+        // InputGroup 是横向 flex：textarea 用 flex-1 撑满宽度、min-w-0 允许收缩，
+        // 高度由 min-h/max-h 与用户拖拽（resize-y）决定，不受弹性布局影响
+        "field-sizing-fixed min-h-9 max-h-72 min-w-0 flex-1 resize-y",
         className
       )}
       name="message"
@@ -1100,9 +1100,11 @@ export const PromptInputFooter = ({
   className,
   ...props
 }: PromptInputFooterProps) => (
+  // inline-end：与输入框同一行、贴右下角。block-end 会另起一行占约 46px，
+  // 让小尺寸面板（如在线客服）的输入区凭空高一截。
   <InputGroupAddon
-    align="block-end"
-    className={cn("justify-between gap-1", className)}
+    align="inline-end"
+    className={cn("ml-1 w-auto gap-1 pt-0 pb-1.5", className)}
     {...props}
   />
 );

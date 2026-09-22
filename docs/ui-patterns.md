@@ -339,8 +339,10 @@ npx ai-elements@latest add conversation message prompt-input
 - `FloatingTools` 只挂在首页（`app/[locale]/page.tsx`），其他页面不出现。
 - 断点 `hidden xl:block`：**≥ 1280px 才渲染**。1024–1279px 时内容区右缘会与 48px 宽的轨道重叠，宁可不显示。
 - 三个按钮纵向排列，固定在视口右侧、垂直居中，层级 `z-30`（低于 Header 的 `z-40`）。
-- 在线客服 → `Popover`（`side="left"`、`sideOffset={8}`），内容为 `ServiceChat`：头部（标题 + 服务时间）、对话区、输入行。对话区由 AI Elements 的 `Conversation` / `Message` / `PromptInput` 组成，消息状态与流式接收来自 `useChat`（`@ai-sdk/react`）。
-- 面板宽 320px（`w-[20rem]`），对话区固定高 269px（`h-[16.8rem]`），总高约 474px。矮视口由 Radix 的碰撞检测整体上移，不自己算位置。
+- 在线客服 → `Popover`（`side="left"`、`sideOffset={8}`），内容为 `ServiceChat`：头部（标题 + 服务时间）、对话区、输入区。对话区由 AI Elements 的 `Conversation` / `Message` / `PromptInput` 组成，消息状态与流式接收来自 `useChat`（`@ai-sdk/react`）。
+- 面板宽 320px（`w-[20rem]`），对话区固定高 269px（`h-[16.8rem]`），输入区默认约 65px，总高约 402px。矮视口由 Radix 的碰撞检测整体上移，不自己算位置。
+- **输入行：发送按钮与输入框同排**。`PromptInputFooter` 用 `InputGroupAddon align="inline-end"`（不是 `block-end`）贴在输入框右下角；`block-end` 会让按钮另起一行、凭空多占约 46px。`InputGroup` 因此加 `h-auto items-end`，`PromptInputTextarea` 用 `flex-1 min-w-0`（横向 flex 里宽度撑满，高度仍归 `min-h` / `max-h` / `resize` 管）。
+- **输入框可手动调高**：`resize-y` + `min-h-9`（36px）/ `max-h-72`（288px），浏览器原生拖拽把手在输入框右下角，按钮留 `ml-1` 与把手分开。
 - 不用遮罩、不锁滚动、不改 URL。内部点击不关闭，`Esc` 关闭并把焦点还给触发按钮（Radix 默认行为，未覆写）。
 - **只发文本**：不渲染附件按钮，`onSubmit` 里直接忽略 `PromptInputMessage.files`。
 - 联系方式 → `HoverCard` + `side="left"`，提示框内为电话 / 邮箱 / 微信二维码。

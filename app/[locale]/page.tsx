@@ -6,6 +6,7 @@ import { FloatingTools } from "@/components/layout/floating-tools";
 import { ScrollRail } from "@/components/layout/scroll-rail";
 import { AboutSection } from "@/components/sections/about-section";
 import { CasesSection } from "@/components/sections/cases-section";
+import { FaqSection } from "@/components/sections/faq-section";
 import { GuideSection } from "@/components/sections/guide-section";
 import { HeroSection } from "@/components/sections/hero-section";
 import { ProductsSection } from "@/components/sections/products-section";
@@ -53,6 +54,7 @@ export default async function HomePage({
       <GuideSection locale={locale} steps={guide.steps} />
       <CasesSection locale={locale} cases={cases} />
       <AboutSection locale={locale} />
+      <FaqSection locale={locale} faqs={guide.faqs} />
       <Container className="pb-16">
         <DemoNotice />
       </Container>

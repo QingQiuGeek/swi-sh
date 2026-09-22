@@ -93,6 +93,11 @@
       "subtitle": "十二年专注车险服务，用透明的价格与保额帮车主做决定。",
       "cta": "了解我们"
     },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "常见问题",
+      "subtitle": "投保前最常被问到的几个问题，完整清单见投保指引。"
+    },
     "emptyProducts": "暂无在售产品",
     "emptyProductsDesc": "产品正在调整上架，请稍后再来。"
   },

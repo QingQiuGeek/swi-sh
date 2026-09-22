@@ -185,7 +185,7 @@ function ChatPanel({
               placeholder={t.tools.chatPlaceholder}
             />
           </PromptInputBody>
-          <PromptInputFooter className="justify-end">
+          <PromptInputFooter>
             <PromptInputSubmit
               aria-label={isBusy ? t.tools.chatStop : t.tools.chatSend}
               onStop={stop}

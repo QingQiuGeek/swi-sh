@@ -93,6 +93,11 @@
       "subtitle": "Twelve years in car insurance, helping drivers decide with transparent prices and coverage limits.",
       "cta": "Learn about us"
     },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Common questions",
+      "subtitle": "What drivers ask most before buying. The full list is in the buying guide."
+    },
     "emptyProducts": "No plans available",
     "emptyProductsDesc": "Plans are being updated. Please check back later."
   },
