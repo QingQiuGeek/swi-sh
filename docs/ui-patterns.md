@@ -326,6 +326,9 @@ npx ai-elements@latest add conversation message prompt-input
 - 通过 `AuthProvider` 暴露 `openAuthDialog({ intent })`，任何地方都能唤起。
 - 弹窗内含「登录」「注册」两个 Tab；打开时**不改变 URL**。
 - 登录成功后关闭弹窗并**回到原意图**（如投保表单），由调用方传入的回调承接。
+- 实现上有两个必须遵守的点（`components/auth/auth-provider.tsx`）：
+  1. **副作用不能写进 `setState` 的更新函数**。`setDialog((current) => { onSuccess(); return ... })` 里的回调会被 React 在**渲染期**调用，触发 `Cannot update a component (Router) while rendering a different component`；是否踩到取决于该组件当时有没有待处理更新，所以表现为**偶发**。落地方式：回调放 `useRef`，在事件流程里调用。
+  2. **`router.push()` 要排在 `router.refresh()` 之前**。两者同批发出时 push 会让 refresh 落空，共享的 `[locale]` 布局不会重新取，Header 会停在「登录 / 注册」直到手动刷新；先 push 再 refresh，refresh 才作用在新路由上。
 
 ### 8.6 移动端导航
 
